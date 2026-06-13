@@ -1,6 +1,8 @@
 import { CodeEntry, CodeSystem, SectionKind } from "./model";
 import rawCodes from "./codes.json";
 import { ICD10_FULL } from "./icd10cm-data";
+import { RXNORM_FULL } from "./rxnorm-data";
+import { UNII_FULL } from "./unii-data";
 
 // CODE SETS
 //
@@ -66,19 +68,24 @@ const SYS_ALIAS: Record<string, CodeSystem> = {
   RXNORM: "RXNORM",
 };
 
-// Build the full ICD-10 catalog: official set as the base, with curated + codes.json
-// aliases layered on (matching by code), and any extra codes appended. Keeps the
-// official description authoritative; only enriches aliases for lexical recall.
-function buildIcd10(): CodeEntry[] {
+// Build a full catalog: the official public set as the base, with curated +
+// codes.json aliases layered on (matching by code) and any extra codes appended.
+// Keeps the official description authoritative; only enriches aliases so the fast
+// lexical path catches colloquial phrasing ("high BP" -> I10, "water pill" -> HCTZ).
+function buildFull(
+  full: { code: string; description: string; aliases?: string[] }[],
+  curated: CodeEntry[],
+  system: CodeSystem,
+): CodeEntry[] {
   const byCode = new Map<string, CodeEntry>();
-  for (const c of ICD10_FULL) {
-    byCode.set(c.code.toUpperCase(), { system: "ICD10", code: c.code, description: c.description, aliases: [] });
+  for (const c of full) {
+    byCode.set(c.code.toUpperCase(), { system, code: c.code, description: c.description, aliases: [...(c.aliases ?? [])] });
   }
   const overlays: CodeEntry[] = [
-    ...ICD10,
+    ...curated,
     ...(rawCodes as RawCode[])
-      .filter((c) => SYS_ALIAS[c.system] === "ICD10")
-      .map((c): CodeEntry => ({ system: "ICD10", code: c.code, description: c.description, aliases: c.aliases ?? [] })),
+      .filter((c) => SYS_ALIAS[c.system] === system)
+      .map((c): CodeEntry => ({ system, code: c.code, description: c.description, aliases: c.aliases ?? [] })),
   ];
   for (const o of overlays) {
     const key = o.code.toUpperCase();
@@ -92,20 +99,11 @@ function buildIcd10(): CodeEntry[] {
   return [...byCode.values()];
 }
 
-// Curated base + codes.json extras (unchanged behavior for non-ICD systems).
-function withExtras(base: CodeEntry[], system: CodeSystem): CodeEntry[] {
-  const have = new Set(base.map((c) => c.code.toUpperCase()));
-  const extra = (rawCodes as RawCode[])
-    .filter((c) => SYS_ALIAS[c.system] === system && !have.has(c.code.toUpperCase()))
-    .map((c): CodeEntry => ({ system, code: c.code, description: c.description, aliases: c.aliases ?? [] }));
-  return [...base, ...extra];
-}
-
 const BY_SYSTEM: Record<CodeSystem, CodeEntry[]> = {
-  ICD10: buildIcd10(),
-  RXNORM: withExtras(RXNORM, "RXNORM"),
+  ICD10: buildFull(ICD10_FULL, ICD10, "ICD10"),
+  RXNORM: buildFull(RXNORM_FULL, RXNORM, "RXNORM"),
   LOINC,
-  UNII,
+  UNII: buildFull(UNII_FULL, UNII, "UNII"),
 };
 
 // O(1) exact-code lookup per system (the verifier's first gate). Built once.
