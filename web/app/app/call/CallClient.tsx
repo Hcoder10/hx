@@ -4,9 +4,45 @@ import { useRef, useState } from "react";
 
 type Status = "idle" | "connecting" | "live" | "ended" | "error";
 
+// Tools the voice agent can call. add_visit writes to the Hx record (real commit).
+const TOOLS = [
+  {
+    type: "function",
+    name: "add_visit",
+    description:
+      "Record a new medical visit/appointment in the patient's Hx record after she describes it. Only call once you have at least a title.",
+    parameters: {
+      type: "object",
+      properties: {
+        title: { type: "string", description: "Short visit title, e.g. 'ER visit - chest pain'" },
+        place: { type: "string", description: "Where it happened" },
+        providerName: { type: "string", description: "Doctor or facility name, if known" },
+        providerRole: { type: "string", description: "Specialty, if known" },
+        date: { type: "string", description: "YYYY-MM-DD, if known" },
+        summary: { type: "string", description: "One-sentence plain summary of what happened" },
+        medications: {
+          type: "array",
+          description: "Any new medicines prescribed",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              dose: { type: "string" },
+              reason: { type: "string" },
+            },
+            required: ["name"],
+          },
+        },
+      },
+      required: ["title"],
+    },
+  },
+];
+
 export default function CallClient() {
   const [status, setStatus] = useState<Status>("idle");
   const [caption, setCaption] = useState("");
+  const [note, setNote] = useState("");
   const [error, setError] = useState("");
 
   const wsRef = useRef<WebSocket | null>(null);
@@ -15,6 +51,7 @@ export default function CallClient() {
   const procRef = useRef<ScriptProcessorNode | null>(null);
   const srcRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const playHead = useRef(0);
+  const callsRef = useRef<Map<string, { name: string; args: string }>>(new Map());
 
   const RATE = 24000;
 
@@ -49,11 +86,38 @@ export default function CallClient() {
     playHead.current = startAt + buffer.duration;
   }
 
+  async function handleToolCall(ws: WebSocket, callId: string, name: string, argsStr: string) {
+    let output: unknown = { ok: false, error: "unknown tool" };
+    try {
+      const args = JSON.parse(argsStr || "{}");
+      if (name === "add_visit") {
+        const res = await fetch("/api/visits", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(args),
+        });
+        output = await res.json();
+        setNote(`✓ Saved to your record: ${args.title ?? "new visit"}`);
+      }
+    } catch (e) {
+      output = { ok: false, error: e instanceof Error ? e.message : "tool failed" };
+    }
+    // Return the result to the model and let it speak a confirmation.
+    ws.send(
+      JSON.stringify({
+        type: "conversation.item.create",
+        item: { type: "function_call_output", call_id: callId, output: JSON.stringify(output) },
+      }),
+    );
+    ws.send(JSON.stringify({ type: "response.create" }));
+  }
+
   async function start() {
     try {
       setStatus("connecting");
       setError("");
       setCaption("");
+      setNote("");
 
       const res = await fetch("/api/voice/token");
       const data = await res.json();
@@ -79,6 +143,7 @@ export default function CallClient() {
               voice: "eve",
               turn_detection: { type: "server_vad" },
               reasoning_effort: "none",
+              tools: TOOLS,
               audio: {
                 input: { format: { type: "audio/pcm", rate: RATE } },
                 output: { format: { type: "audio/pcm", rate: RATE } },
@@ -86,8 +151,7 @@ export default function CallClient() {
             },
           }),
         );
-        // Greet first so the user immediately hears the agent.
-        ws.send(JSON.stringify({ type: "response.create" }));
+        ws.send(JSON.stringify({ type: "response.create" })); // greet first
 
         const source = ac.createMediaStreamSource(stream);
         const proc = ac.createScriptProcessor(4096, 1, 1);
@@ -103,21 +167,45 @@ export default function CallClient() {
         setStatus("live");
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ws.onmessage = (evt) => {
-        let ev: { type?: string; delta?: string; error?: { message?: string } };
+        let ev: any;
         try {
           ev = JSON.parse(typeof evt.data === "string" ? evt.data : "");
         } catch {
           return;
         }
-        if (ev.type === "error") {
-          setError(ev.error?.message || "Voice error.");
-          return;
-        }
-        if (ev.type === "response.created") setCaption("");
-        if (ev.type === "response.output_audio.delta" && ev.delta) playB64Pcm16(ev.delta, ac);
-        if (ev.type === "response.output_audio_transcript.delta" && typeof ev.delta === "string") {
-          setCaption((c) => (c + ev.delta).slice(-500));
+        switch (ev.type) {
+          case "error":
+            setError(ev.error?.message || "Voice error.");
+            break;
+          case "response.created":
+            setCaption("");
+            break;
+          case "response.output_audio.delta":
+            if (ev.delta) playB64Pcm16(ev.delta, ac);
+            break;
+          case "response.output_audio_transcript.delta":
+            if (typeof ev.delta === "string") setCaption((c) => (c + ev.delta).slice(-500));
+            break;
+          case "response.output_item.added":
+            if (ev.item?.type === "function_call") {
+              callsRef.current.set(ev.item.call_id, { name: ev.item.name, args: "" });
+            }
+            break;
+          case "response.function_call_arguments.delta": {
+            const c = callsRef.current.get(ev.call_id);
+            if (c) c.args += ev.delta || "";
+            break;
+          }
+          case "response.function_call_arguments.done": {
+            const stored = callsRef.current.get(ev.call_id);
+            const name = ev.name || stored?.name;
+            const argsStr = ev.arguments ?? stored?.args ?? "{}";
+            if (name) handleToolCall(ws, ev.call_id, name, argsStr);
+            callsRef.current.delete(ev.call_id);
+            break;
+          }
         }
       };
 
@@ -155,7 +243,7 @@ export default function CallClient() {
       <p className="text-sm font-medium text-gray-700">
         {status === "idle" && "Tap to talk to Hx"}
         {status === "connecting" && "Connecting…"}
-        {live && "Listening — say hello, or ask “are my medicines safe together?”"}
+        {live && "Listening — say hello, ask “are my medicines safe together?”, or tell Hx about a visit"}
         {status === "ended" && "Call ended. Tap to start again."}
         {status === "error" && "Something went wrong."}
       </p>
@@ -163,10 +251,11 @@ export default function CallClient() {
       {caption && (
         <div className="mx-auto max-w-md rounded-2xl bg-gray-50 p-4 text-left text-gray-800">{caption}</div>
       )}
+      {note && <p className="text-sm font-medium text-teal-700">{note}</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       <p className="text-xs text-gray-400">
-        Powered by Grok Voice ({"grok-voice-think-fast-1.1"}). Allow microphone access when asked.
+        Powered by Grok Voice (grok-voice-think-fast-1.1). Allow microphone access when asked.
       </p>
     </div>
   );
