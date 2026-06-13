@@ -73,6 +73,7 @@ export default function Timeline() {
       <nav className="flex gap-4 pt-2 text-sm text-teal-700">
         <Link href="/app/medications">Medicines</Link>
         <Link href="/app/next-appointment">Find care</Link>
+        <Link href="/app/validate">Data check</Link>
       </nav>
     </main>
   );

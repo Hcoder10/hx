@@ -1,0 +1,1800 @@
+[
+{
+"code": "E11.9",
+"description": "Type 2 diabetes mellitus without complications",
+"system": "ICD-10-CM",
+"aliases": [
+"type 2 diabetes",
+"T2DM",
+"DM2",
+"adult-onset diabetes",
+"NIDDM"
+]
+},
+{
+"code": "E11.65",
+"description": "Type 2 diabetes mellitus with hyperglycemia",
+"system": "ICD-10-CM",
+"aliases": [
+"uncontrolled type 2 diabetes",
+"T2DM with high blood sugar",
+"hyperglycemia in diabetes"
+]
+},
+{
+"code": "E11.21",
+"description": "Type 2 diabetes mellitus with diabetic nephropathy",
+"system": "ICD-10-CM",
+"aliases": [
+"diabetic kidney disease",
+"T2DM nephropathy",
+"diabetic CKD"
+]
+},
+{
+"code": "E11.40",
+"description": "Type 2 diabetes mellitus with diabetic neuropathy, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"diabetic nerve damage",
+"T2DM neuropathy",
+"diabetic peripheral neuropathy"
+]
+},
+{
+"code": "E10.9",
+"description": "Type 1 diabetes mellitus without complications",
+"system": "ICD-10-CM",
+"aliases": [
+"type 1 diabetes",
+"T1DM",
+"juvenile diabetes",
+"IDDM",
+"insulin-dependent diabetes"
+]
+},
+{
+"code": "R73.03",
+"description": "Prediabetes",
+"system": "ICD-10-CM",
+"aliases": [
+"prediabetes",
+"impaired glucose tolerance",
+"borderline diabetes"
+]
+},
+{
+"code": "I10",
+"description": "Essential (primary) hypertension",
+"system": "ICD-10-CM",
+"aliases": [
+"hypertension",
+"HTN",
+"high blood pressure",
+"high BP",
+"essential hypertension"
+]
+},
+{
+"code": "I11.9",
+"description": "Hypertensive heart disease without heart failure",
+"system": "ICD-10-CM",
+"aliases": [
+"hypertensive heart disease",
+"HTN heart disease"
+]
+},
+{
+"code": "I12.9",
+"description": "Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+"system": "ICD-10-CM",
+"aliases": [
+"hypertensive kidney disease",
+"HTN CKD",
+"hypertensive nephropathy"
+]
+},
+{
+"code": "I50.9",
+"description": "Heart failure, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"heart failure",
+"CHF",
+"congestive heart failure",
+"HF"
+]
+},
+{
+"code": "I48.91",
+"description": "Unspecified atrial fibrillation",
+"system": "ICD-10-CM",
+"aliases": [
+"atrial fibrillation",
+"AFib",
+"A-fib",
+"irregular heartbeat"
+]
+},
+{
+"code": "I25.10",
+"description": "Atherosclerotic heart disease of native coronary artery without angina pectoris",
+"system": "ICD-10-CM",
+"aliases": [
+"coronary artery disease",
+"CAD",
+"coronary heart disease",
+"atherosclerotic heart disease",
+"ASHD"
+]
+},
+{
+"code": "E78.5",
+"description": "Hyperlipidemia, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"hyperlipidemia",
+"high cholesterol",
+"dyslipidemia",
+"high lipids"
+]
+},
+{
+"code": "E78.0",
+"description": "Pure hypercholesterolemia",
+"system": "ICD-10-CM",
+"aliases": [
+"high cholesterol",
+"hypercholesterolemia",
+"elevated cholesterol"
+]
+},
+{
+"code": "E78.1",
+"description": "Pure hyperglyceridemia",
+"system": "ICD-10-CM",
+"aliases": [
+"high triglycerides",
+"hypertriglyceridemia",
+"elevated triglycerides"
+]
+},
+{
+"code": "E78.2",
+"description": "Mixed hyperlipidemia",
+"system": "ICD-10-CM",
+"aliases": [
+"mixed hyperlipidemia",
+"combined hyperlipidemia",
+"high cholesterol and triglycerides"
+]
+},
+{
+"code": "E66.9",
+"description": "Obesity, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"obesity",
+"overweight",
+"obese"
+]
+},
+{
+"code": "E66.01",
+"description": "Morbid (severe) obesity due to excess calories",
+"system": "ICD-10-CM",
+"aliases": [
+"morbid obesity",
+"severe obesity",
+"class III obesity"
+]
+},
+{
+"code": "Z68.35",
+"description": "Body mass index [BMI] 35.0-35.9, adult",
+"system": "ICD-10-CM",
+"aliases": [
+"BMI 35",
+"obese BMI",
+"elevated BMI"
+]
+},
+{
+"code": "E03.9",
+"description": "Hypothyroidism, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"hypothyroidism",
+"underactive thyroid",
+"low thyroid"
+]
+},
+{
+"code": "E03.8",
+"description": "Other specified hypothyroidism",
+"system": "ICD-10-CM",
+"aliases": [
+"hypothyroidism",
+"underactive thyroid"
+]
+},
+{
+"code": "E04.9",
+"description": "Nontoxic goiter, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"goiter",
+"thyroid enlargement",
+"enlarged thyroid"
+]
+},
+{
+"code": "E05.90",
+"description": "Thyrotoxicosis, unspecified without thyrotoxic crisis or storm",
+"system": "ICD-10-CM",
+"aliases": [
+"hyperthyroidism",
+"overactive thyroid",
+"thyrotoxicosis"
+]
+},
+{
+"code": "E06.3",
+"description": "Autoimmune thyroiditis",
+"system": "ICD-10-CM",
+"aliases": [
+"Hashimoto thyroiditis",
+"Hashimoto's",
+"autoimmune thyroiditis"
+]
+},
+{
+"code": "E55.9",
+"description": "Vitamin D deficiency, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"vitamin D deficiency",
+"low vitamin D"
+]
+},
+{
+"code": "D50.9",
+"description": "Iron deficiency anemia, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"iron deficiency anemia",
+"low iron",
+"anemia",
+"IDA"
+]
+},
+{
+"code": "D64.9",
+"description": "Anemia, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"anemia",
+"low blood count",
+"low hemoglobin"
+]
+},
+{
+"code": "F32.9",
+"description": "Major depressive disorder, single episode, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"major depressive disorder",
+"MDD",
+"depression",
+"clinical depression"
+]
+},
+{
+"code": "F32.1",
+"description": "Major depressive disorder, single episode, moderate",
+"system": "ICD-10-CM",
+"aliases": [
+"moderate depression",
+"MDD moderate",
+"moderate major depression"
+]
+},
+{
+"code": "F33.0",
+"description": "Major depressive disorder, recurrent, mild",
+"system": "ICD-10-CM",
+"aliases": [
+"recurrent depression mild",
+"recurrent MDD mild"
+]
+},
+{
+"code": "F33.1",
+"description": "Major depressive disorder, recurrent, moderate",
+"system": "ICD-10-CM",
+"aliases": [
+"recurrent depression",
+"recurrent MDD",
+"recurrent major depression"
+]
+},
+{
+"code": "F33.2",
+"description": "Major depressive disorder, recurrent severe without psychotic features",
+"system": "ICD-10-CM",
+"aliases": [
+"recurrent severe depression",
+"severe recurrent MDD"
+]
+},
+{
+"code": "F41.1",
+"description": "Generalized anxiety disorder",
+"system": "ICD-10-CM",
+"aliases": [
+"generalized anxiety disorder",
+"GAD",
+"anxiety",
+"chronic anxiety"
+]
+},
+{
+"code": "F41.9",
+"description": "Anxiety disorder, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"anxiety",
+"anxiety disorder",
+"anxious"
+]
+},
+{
+"code": "F41.0",
+"description": "Panic disorder [episodic paroxysmal anxiety]",
+"system": "ICD-10-CM",
+"aliases": [
+"panic disorder",
+"panic attacks",
+"panic attack"
+]
+},
+{
+"code": "F40.10",
+"description": "Social phobia, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"social anxiety",
+"social phobia",
+"social anxiety disorder"
+]
+},
+{
+"code": "F43.10",
+"description": "Post-traumatic stress disorder, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"PTSD",
+"post-traumatic stress disorder",
+"post traumatic stress"
+]
+},
+{
+"code": "F43.23",
+"description": "Adjustment disorder with mixed anxiety and depressed mood",
+"system": "ICD-10-CM",
+"aliases": [
+"adjustment disorder",
+"situational anxiety and depression"
+]
+},
+{
+"code": "F43.21",
+"description": "Adjustment disorder with depressed mood",
+"system": "ICD-10-CM",
+"aliases": [
+"adjustment disorder with depression",
+"situational depression"
+]
+},
+{
+"code": "F31.9",
+"description": "Bipolar disorder, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"bipolar disorder",
+"bipolar",
+"manic depression",
+"bipolar affective disorder"
+]
+},
+{
+"code": "F31.81",
+"description": "Bipolar II disorder",
+"system": "ICD-10-CM",
+"aliases": [
+"bipolar II",
+"bipolar 2",
+"bipolar type 2"
+]
+},
+{
+"code": "F90.9",
+"description": "Attention-deficit hyperactivity disorder, unspecified type",
+"system": "ICD-10-CM",
+"aliases": [
+"ADHD",
+"ADD",
+"attention deficit hyperactivity disorder",
+"attention deficit"
+]
+},
+{
+"code": "F90.0",
+"description": "Attention-deficit hyperactivity disorder, predominantly inattentive type",
+"system": "ICD-10-CM",
+"aliases": [
+"ADHD inattentive",
+"ADD",
+"inattentive ADHD"
+]
+},
+{
+"code": "F42.9",
+"description": "Obsessive-compulsive disorder, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"OCD",
+"obsessive-compulsive disorder",
+"obsessive compulsive"
+]
+},
+{
+"code": "F51.01",
+"description": "Primary insomnia",
+"system": "ICD-10-CM",
+"aliases": [
+"insomnia",
+"primary insomnia",
+"trouble sleeping"
+]
+},
+{
+"code": "G47.00",
+"description": "Insomnia, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"insomnia",
+"sleeplessness",
+"trouble sleeping",
+"can't sleep"
+]
+},
+{
+"code": "G47.33",
+"description": "Obstructive sleep apnea (adult) (pediatric)",
+"system": "ICD-10-CM",
+"aliases": [
+"sleep apnea",
+"OSA",
+"obstructive sleep apnea"
+]
+},
+{
+"code": "F10.20",
+"description": "Alcohol dependence, uncomplicated",
+"system": "ICD-10-CM",
+"aliases": [
+"alcohol dependence",
+"alcoholism",
+"alcohol use disorder",
+"AUD"
+]
+},
+{
+"code": "F17.210",
+"description": "Nicotine dependence, cigarettes, uncomplicated",
+"system": "ICD-10-CM",
+"aliases": [
+"nicotine dependence",
+"smoking",
+"tobacco use disorder",
+"cigarette addiction"
+]
+},
+{
+"code": "F19.20",
+"description": "Other psychoactive substance dependence, uncomplicated",
+"system": "ICD-10-CM",
+"aliases": [
+"substance use disorder",
+"drug dependence",
+"polysubstance use"
+]
+},
+{
+"code": "R45.851",
+"description": "Suicidal ideation",
+"system": "ICD-10-CM",
+"aliases": [
+"suicidal ideation",
+"SI",
+"suicidal thoughts"
+]
+},
+{
+"code": "J45.909",
+"description": "Unspecified asthma, uncomplicated",
+"system": "ICD-10-CM",
+"aliases": [
+"asthma",
+"reactive airway disease",
+"bronchial asthma"
+]
+},
+{
+"code": "J45.40",
+"description": "Moderate persistent asthma, uncomplicated",
+"system": "ICD-10-CM",
+"aliases": [
+"moderate persistent asthma",
+"persistent asthma"
+]
+},
+{
+"code": "J44.9",
+"description": "Chronic obstructive pulmonary disease, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"COPD",
+"chronic obstructive pulmonary disease",
+"emphysema",
+"chronic bronchitis"
+]
+},
+{
+"code": "J44.1",
+"description": "Chronic obstructive pulmonary disease with (acute) exacerbation",
+"system": "ICD-10-CM",
+"aliases": [
+"COPD exacerbation",
+"COPD flare",
+"acute COPD"
+]
+},
+{
+"code": "J30.9",
+"description": "Allergic rhinitis, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"allergic rhinitis",
+"hay fever",
+"seasonal allergies",
+"nasal allergies"
+]
+},
+{
+"code": "J06.9",
+"description": "Acute upper respiratory infection, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"URI",
+"upper respiratory infection",
+"common cold",
+"head cold"
+]
+},
+{
+"code": "J02.9",
+"description": "Acute pharyngitis, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"sore throat",
+"pharyngitis",
+"throat infection"
+]
+},
+{
+"code": "J20.9",
+"description": "Acute bronchitis, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"acute bronchitis",
+"chest cold",
+"bronchitis"
+]
+},
+{
+"code": "J18.9",
+"description": "Pneumonia, unspecified organism",
+"system": "ICD-10-CM",
+"aliases": [
+"pneumonia",
+"lung infection",
+"chest infection"
+]
+},
+{
+"code": "R07.9",
+"description": "Chest pain, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"chest pain",
+"chest discomfort"
+]
+},
+{
+"code": "R07.89",
+"description": "Other chest pain",
+"system": "ICD-10-CM",
+"aliases": [
+"chest pain",
+"atypical chest pain",
+"noncardiac chest pain"
+]
+},
+{
+"code": "R07.2",
+"description": "Precordial pain",
+"system": "ICD-10-CM",
+"aliases": [
+"precordial pain",
+"chest pain over heart"
+]
+},
+{
+"code": "I20.9",
+"description": "Angina pectoris, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"angina",
+"chest pain from heart",
+"angina pectoris",
+"cardiac chest pain"
+]
+},
+{
+"code": "R51.9",
+"description": "Headache, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"headache",
+"cephalgia",
+"head pain"
+]
+},
+{
+"code": "G43.909",
+"description": "Migraine, unspecified, not intractable, without status migrainosus",
+"system": "ICD-10-CM",
+"aliases": [
+"migraine",
+"migraine headache",
+"migraines"
+]
+},
+{
+"code": "R10.9",
+"description": "Unspecified abdominal pain",
+"system": "ICD-10-CM",
+"aliases": [
+"abdominal pain",
+"stomach pain",
+"belly pain",
+"stomachache"
+]
+},
+{
+"code": "R10.11",
+"description": "Right upper quadrant pain",
+"system": "ICD-10-CM",
+"aliases": [
+"RUQ pain",
+"right upper abdominal pain"
+]
+},
+{
+"code": "R10.31",
+"description": "Right lower quadrant pain",
+"system": "ICD-10-CM",
+"aliases": [
+"RLQ pain",
+"right lower abdominal pain"
+]
+},
+{
+"code": "K21.9",
+"description": "Gastro-esophageal reflux disease without esophagitis",
+"system": "ICD-10-CM",
+"aliases": [
+"GERD",
+"acid reflux",
+"heartburn",
+"reflux",
+"gastroesophageal reflux"
+]
+},
+{
+"code": "K21.0",
+"description": "Gastro-esophageal reflux disease with esophagitis",
+"system": "ICD-10-CM",
+"aliases": [
+"GERD with esophagitis",
+"erosive esophagitis",
+"reflux esophagitis"
+]
+},
+{
+"code": "K58.9",
+"description": "Irritable bowel syndrome without diarrhea",
+"system": "ICD-10-CM",
+"aliases": [
+"IBS",
+"irritable bowel syndrome",
+"spastic colon"
+]
+},
+{
+"code": "K59.00",
+"description": "Constipation, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"constipation",
+"irregular bowel movements"
+]
+},
+{
+"code": "K29.70",
+"description": "Gastritis, unspecified, without bleeding",
+"system": "ICD-10-CM",
+"aliases": [
+"gastritis",
+"stomach inflammation",
+"stomach irritation"
+]
+},
+{
+"code": "R11.2",
+"description": "Nausea with vomiting, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"nausea and vomiting",
+"N/V",
+"throwing up",
+"feeling sick"
+]
+},
+{
+"code": "R19.7",
+"description": "Diarrhea, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"diarrhea",
+"loose stools",
+"loose bowels"
+]
+},
+{
+"code": "N39.0",
+"description": "Urinary tract infection, site not specified",
+"system": "ICD-10-CM",
+"aliases": [
+"UTI",
+"urinary tract infection",
+"bladder infection"
+]
+},
+{
+"code": "N18.3",
+"description": "Chronic kidney disease, stage 3 (moderate)",
+"system": "ICD-10-CM",
+"aliases": [
+"CKD stage 3",
+"chronic kidney disease",
+"kidney disease stage 3"
+]
+},
+{
+"code": "N18.9",
+"description": "Chronic kidney disease, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"CKD",
+"chronic kidney disease",
+"kidney disease"
+]
+},
+{
+"code": "M54.5",
+"description": "Low back pain",
+"system": "ICD-10-CM",
+"aliases": [
+"low back pain",
+"lower back pain",
+"lumbago",
+"LBP",
+"backache"
+]
+},
+{
+"code": "M54.50",
+"description": "Low back pain, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"low back pain",
+"lumbar pain",
+"back pain"
+]
+},
+{
+"code": "M54.2",
+"description": "Cervicalgia",
+"system": "ICD-10-CM",
+"aliases": [
+"neck pain",
+"cervicalgia"
+]
+},
+{
+"code": "M25.561",
+"description": "Pain in right knee",
+"system": "ICD-10-CM",
+"aliases": [
+"right knee pain",
+"knee pain"
+]
+},
+{
+"code": "M25.551",
+"description": "Pain in right hip",
+"system": "ICD-10-CM",
+"aliases": [
+"right hip pain",
+"hip pain"
+]
+},
+{
+"code": "M19.90",
+"description": "Unspecified osteoarthritis, unspecified site",
+"system": "ICD-10-CM",
+"aliases": [
+"osteoarthritis",
+"OA",
+"arthritis",
+"degenerative joint disease",
+"DJD"
+]
+},
+{
+"code": "M79.7",
+"description": "Fibromyalgia",
+"system": "ICD-10-CM",
+"aliases": [
+"fibromyalgia",
+"fibro",
+"widespread pain"
+]
+},
+{
+"code": "M81.0",
+"description": "Age-related osteoporosis without current pathological fracture",
+"system": "ICD-10-CM",
+"aliases": [
+"osteoporosis",
+"brittle bones",
+"bone loss"
+]
+},
+{
+"code": "R53.83",
+"description": "Other fatigue",
+"system": "ICD-10-CM",
+"aliases": [
+"fatigue",
+"tiredness",
+"exhaustion",
+"low energy"
+]
+},
+{
+"code": "R53.1",
+"description": "Weakness",
+"system": "ICD-10-CM",
+"aliases": [
+"weakness",
+"asthenia",
+"generalized weakness"
+]
+},
+{
+"code": "R42",
+"description": "Dizziness and giddiness",
+"system": "ICD-10-CM",
+"aliases": [
+"dizziness",
+"lightheadedness",
+"vertigo",
+"giddiness"
+]
+},
+{
+"code": "R00.2",
+"description": "Palpitations",
+"system": "ICD-10-CM",
+"aliases": [
+"palpitations",
+"heart racing",
+"fluttering heartbeat"
+]
+},
+{
+"code": "R06.02",
+"description": "Shortness of breath",
+"system": "ICD-10-CM",
+"aliases": [
+"shortness of breath",
+"SOB",
+"dyspnea",
+"trouble breathing"
+]
+},
+{
+"code": "R05.9",
+"description": "Cough, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"cough",
+"coughing"
+]
+},
+{
+"code": "R50.9",
+"description": "Fever, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"fever",
+"febrile",
+"high temperature",
+"pyrexia"
+]
+},
+{
+"code": "L20.9",
+"description": "Atopic dermatitis, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"eczema",
+"atopic dermatitis",
+"atopic eczema"
+]
+},
+{
+"code": "L30.9",
+"description": "Dermatitis, unspecified",
+"system": "ICD-10-CM",
+"aliases": [
+"dermatitis",
+"rash",
+"skin inflammation"
+]
+},
+{
+"code": "Z00.00",
+"description": "Encounter for general adult medical examination without abnormal findings",
+"system": "ICD-10-CM",
+"aliases": [
+"annual physical",
+"wellness visit",
+"routine checkup",
+"general exam",
+"physical exam"
+]
+},
+{
+"code": "Z79.899",
+"description": "Other long term (current) drug therapy",
+"system": "ICD-10-CM",
+"aliases": [
+"long-term medication use",
+"chronic drug therapy",
+"long term meds"
+]
+},
+{
+"code": "Z23",
+"description": "Encounter for immunization",
+"system": "ICD-10-CM",
+"aliases": [
+"immunization",
+"vaccine",
+"vaccination",
+"shot"
+]
+},
+{
+"code": "36437",
+"description": "sertraline",
+"system": "RxNorm",
+"aliases": [
+"Zoloft",
+"sertralin",
+"sertaline",
+"setraline"
+]
+},
+{
+"code": "10689",
+"description": "tramadol",
+"system": "RxNorm",
+"aliases": [
+"Ultram",
+"ConZip",
+"tramodol",
+"tramadole",
+"tramidol"
+]
+},
+{
+"code": "29046",
+"description": "lisinopril",
+"system": "RxNorm",
+"aliases": [
+"Prinivil",
+"Zestril",
+"Qbrelis",
+"lisinipril",
+"linsinopril",
+"lisonopril"
+]
+},
+{
+"code": "6809",
+"description": "metformin",
+"system": "RxNorm",
+"aliases": [
+"Glucophage",
+"Fortamet",
+"Glumetza",
+"Riomet",
+"metphormin",
+"metformine",
+"metfornin"
+]
+},
+{
+"code": "83367",
+"description": "atorvastatin",
+"system": "RxNorm",
+"aliases": [
+"Lipitor",
+"atorvistatin",
+"atorvastin",
+"atorvastatine"
+]
+},
+{
+"code": "7646",
+"description": "omeprazole",
+"system": "RxNorm",
+"aliases": [
+"Prilosec",
+"Losec",
+"omeprazol",
+"omperazole",
+"omeprozole"
+]
+},
+{
+"code": "10582",
+"description": "levothyroxine",
+"system": "RxNorm",
+"aliases": [
+"Synthroid",
+"Levoxyl",
+"Levothroid",
+"Unithroid",
+"Tirosint",
+"levothyroxin",
+"levothryoxine",
+"levothyroxene"
+]
+},
+{
+"code": "17767",
+"description": "amlodipine",
+"system": "RxNorm",
+"aliases": [
+"Norvasc",
+"Katerzia",
+"amlodipene",
+"amlopidine",
+"amlodapine"
+]
+},
+{
+"code": "5487",
+"description": "hydrochlorothiazide",
+"system": "RxNorm",
+"aliases": [
+"Microzide",
+"HCTZ",
+"Esidrix",
+"hydrochlorthiazide",
+"hydrochlorothiazid",
+"hydrochlorthiazid"
+]
+},
+{
+"code": "25480",
+"description": "gabapentin",
+"system": "RxNorm",
+"aliases": [
+"Neurontin",
+"Gralise",
+"Horizant",
+"gabapenten",
+"gabapentine",
+"gabapantin"
+]
+},
+{
+"code": "723",
+"description": "amoxicillin",
+"system": "RxNorm",
+"aliases": [
+"Amoxil",
+"Moxatag",
+"amoxicilin",
+"amoxicillen",
+"amoxacillin",
+"amoxycillin"
+]
+},
+{
+"code": "18631",
+"description": "azithromycin",
+"system": "RxNorm",
+"aliases": [
+"Zithromax",
+"Z-Pak",
+"Zmax",
+"azithromicin",
+"azithromyacin",
+"azithromycine"
+]
+},
+{
+"code": "5640",
+"description": "ibuprofen",
+"system": "RxNorm",
+"aliases": [
+"Advil",
+"Motrin",
+"ibuprophen",
+"ibruprofen",
+"iboprofen",
+"ibuprofin"
+]
+},
+{
+"code": "161",
+"description": "acetaminophen",
+"system": "RxNorm",
+"aliases": [
+"Tylenol",
+"paracetamol",
+"APAP",
+"acetominophen",
+"acetaminaphen",
+"acitaminophen"
+]
+},
+{
+"code": "72625",
+"description": "duloxetine",
+"system": "RxNorm",
+"aliases": [
+"Cymbalta",
+"Drizalma",
+"duloxitine",
+"duloxetin",
+"dulexetine"
+]
+},
+{
+"code": "321988",
+"description": "escitalopram",
+"system": "RxNorm",
+"aliases": [
+"Lexapro",
+"Cipralex",
+"escitalapram",
+"escidalopram",
+"escilatopram"
+]
+},
+{
+"code": "42347",
+"description": "bupropion",
+"system": "RxNorm",
+"aliases": [
+"Wellbutrin",
+"Zyban",
+"Aplenzin",
+"Forfivo",
+"buproprion",
+"bupropian",
+"buprion"
+]
+},
+{
+"code": "88249",
+"description": "montelukast",
+"system": "RxNorm",
+"aliases": [
+"Singulair",
+"montelucast",
+"monteleukast",
+"montelukaste"
+]
+},
+{
+"code": "40790",
+"description": "pantoprazole",
+"system": "RxNorm",
+"aliases": [
+"Protonix",
+"pantaprazole",
+"pantoprazol",
+"pantoprozole"
+]
+},
+{
+"code": "52175",
+"description": "losartan",
+"system": "RxNorm",
+"aliases": [
+"Cozaar",
+"lozartan",
+"losarten",
+"losortan"
+]
+},
+{
+"code": "6918",
+"description": "metoprolol",
+"system": "RxNorm",
+"aliases": [
+"Lopressor",
+"Toprol-XL",
+"Kapspargo",
+"metaprolol",
+"metoprolal",
+"metoprol"
+]
+},
+{
+"code": "4603",
+"description": "furosemide",
+"system": "RxNorm",
+"aliases": [
+"Lasix",
+"furosemid",
+"frusemide",
+"furosamide",
+"fursemide"
+]
+},
+{
+"code": "8640",
+"description": "prednisone",
+"system": "RxNorm",
+"aliases": [
+"Deltasone",
+"Rayos",
+"prednison",
+"prednizone",
+"prednsone"
+]
+},
+{
+"code": "11289",
+"description": "warfarin",
+"system": "RxNorm",
+"aliases": [
+"Coumadin",
+"Jantoven",
+"warfrin",
+"warferin",
+"wafarin",
+"warfarine"
+]
+},
+{
+"code": "32968",
+"description": "clopidogrel",
+"system": "RxNorm",
+"aliases": [
+"Plavix",
+"clopidogril",
+"clopidogrol",
+"clopidogrele",
+"clopidigrel"
+]
+},
+{
+"code": "2556",
+"description": "citalopram",
+"system": "RxNorm",
+"aliases": [
+"Celexa",
+"citalapram",
+"citaopram",
+"citilopram",
+"citaolpram"
+]
+},
+{
+"code": "39786",
+"description": "venlafaxine",
+"system": "RxNorm",
+"aliases": [
+"Effexor",
+"venlafaxin",
+"venalfaxine",
+"venlafexine",
+"venlaflaxine"
+]
+},
+{
+"code": "4493",
+"description": "fluoxetine",
+"system": "RxNorm",
+"aliases": [
+"Prozac",
+"Sarafem",
+"fluoxitine",
+"fluoxetin",
+"flouxetine",
+"fluoxedine"
+]
+},
+{
+"code": "32937",
+"description": "paroxetine",
+"system": "RxNorm",
+"aliases": [
+"Paxil",
+"Pexeva",
+"Brisdelle",
+"paroxitine",
+"paroxetin",
+"peroxetine"
+]
+},
+{
+"code": "6922",
+"description": "metronidazole",
+"system": "RxNorm",
+"aliases": [
+"Flagyl",
+"metronidazol",
+"metronidazloe",
+"metronizadole",
+"metronidozole"
+]
+},
+{
+"code": "2551",
+"description": "ciprofloxacin",
+"system": "RxNorm",
+"aliases": [
+"Cipro",
+"ciproflaxin",
+"ciproflaxacin",
+"cipfloxacin",
+"ciprofloxin"
+]
+},
+{
+"code": "2231",
+"description": "cephalexin",
+"system": "RxNorm",
+"aliases": [
+"Keflex",
+"cefalexin",
+"cephalexen",
+"cephlexin",
+"cephalexine"
+]
+},
+{
+"code": "10737",
+"description": "trazodone",
+"system": "RxNorm",
+"aliases": [
+"Desyrel",
+"Oleptro",
+"trazadone",
+"trasodone",
+"trazedone"
+]
+},
+{
+"code": "41493",
+"description": "meloxicam",
+"system": "RxNorm",
+"aliases": [
+"Mobic",
+"Vivlodex",
+"meloxicaam",
+"meloxecam",
+"meloxican"
+]
+},
+{
+"code": "8745",
+"description": "promethazine",
+"system": "RxNorm",
+"aliases": [
+"Phenergan",
+"Promethegan",
+"promethezine",
+"promethazin",
+"promathazine"
+]
+},
+{
+"code": "21949",
+"description": "cyclobenzaprine",
+"system": "RxNorm",
+"aliases": [
+"Flexeril",
+"Amrix",
+"cyclobenzapine",
+"cyclobenzaprin",
+"cyclobenzeprine"
+]
+},
+{
+"code": "7804",
+"description": "oxycodone",
+"system": "RxNorm",
+"aliases": [
+"OxyContin",
+"Roxicodone",
+"Oxaydo",
+"oxycodon",
+"oxicodone",
+"oxycondone"
+]
+},
+{
+"code": "3498",
+"description": "diphenhydramine",
+"system": "RxNorm",
+"aliases": [
+"Benadryl",
+"diphenhydramin",
+"diphenhydromine",
+"diphenhydrymine",
+"diphenydramine"
+]
+},
+{
+"code": "1191",
+"description": "aspirin",
+"system": "RxNorm",
+"aliases": [
+"Bayer",
+"Ecotrin",
+"Bufferin",
+"acetylsalicylic acid",
+"asprin",
+"aspirine",
+"asperin"
+]
+},
+{
+"code": "596",
+"description": "alprazolam",
+"system": "RxNorm",
+"aliases": [
+"Xanax",
+"Niravam",
+"alprazalam",
+"alprozolam",
+"aprazolam",
+"alprazolm"
+]
+},
+{
+"code": "6470",
+"description": "lorazepam",
+"system": "RxNorm",
+"aliases": [
+"Ativan",
+"Loreev",
+"lorezepam",
+"lorazapam",
+"lorazepem"
+]
+},
+{
+"code": "2598",
+"description": "clonazepam",
+"system": "RxNorm",
+"aliases": [
+"Klonopin",
+"clonazapam",
+"clonezepam",
+"clonozepam",
+"klonazepam"
+]
+},
+{
+"code": "39993",
+"description": "zolpidem",
+"system": "RxNorm",
+"aliases": [
+"Ambien",
+"Edluar",
+"Intermezzo",
+"zolpidem tartrate",
+"zolpidum",
+"zolpiden",
+"zolpidam"
+]
+},
+{
+"code": "435",
+"description": "albuterol",
+"system": "RxNorm",
+"aliases": [
+"ProAir",
+"Ventolin",
+"Proventil",
+"salbutamol",
+"albuteral",
+"albuterole"
+]
+},
+{
+"code": "2599",
+"description": "clonidine",
+"system": "RxNorm",
+"aliases": [
+"Catapres",
+"Kapvay",
+"clonadine",
+"clonidin",
+"clonodine",
+"clondine"
+]
+},
+{
+"code": "1202",
+"description": "atenolol",
+"system": "RxNorm",
+"aliases": [
+"Tenormin",
+"atenalol",
+"atenelol",
+"atenolal",
+"atinolol"
+]
+},
+{
+"code": "4278",
+"description": "famotidine",
+"system": "RxNorm",
+"aliases": [
+"Pepcid",
+"Zantac 360",
+"famotodine",
+"famotadine",
+"famitidine",
+"famotidin"
+]
+},
+{
+"code": "1364430",
+"description": "apixaban",
+"system": "RxNorm",
+"aliases": [
+"Eliquis",
+"apixiban",
+"apixabin",
+"apixiaban",
+"apaxiban"
+]
+},
+{
+"code": "1114195",
+"description": "rivaroxaban",
+"system": "RxNorm",
+"aliases": [
+"Xarelto",
+"rivaroxiban",
+"rivaroxoban",
+"rivoroxaban",
+"rivaroxiaban"
+]
+},
+{
+"code": "77492",
+"description": "tamsulosin",
+"system": "RxNorm",
+"aliases": [
+"Flomax",
+"tamsulosen",
+"tamulosin",
+"tamsolosin",
+"tamsulosine"
+]
+},
+{
+"code": "341248",
+"description": "ezetimibe",
+"system": "RxNorm",
+"aliases": [
+"Zetia",
+"Nexlizet",
+"ezetimib",
+"ezetemibe",
+"ezitimibe",
+"ezetamibe"
+]
+},
+{
+"code": "301542",
+"description": "rosuvastatin",
+"system": "RxNorm",
+"aliases": [
+"Crestor",
+"Ezallor",
+"rosuvastin",
+"rosuvostatin",
+"rosuvastatine",
+"rouvastatin"
+]
+},
+{
+"code": "36567",
+"description": "simvastatin",
+"system": "RxNorm",
+"aliases": [
+"Zocor",
+"Flolipid",
+"simvastin",
+"simvistatin",
+"simvastatine",
+"simvastatn"
+]
+},
+{
+"code": "42463",
+"description": "pravastatin",
+"system": "RxNorm",
+"aliases": [
+"Pravachol",
+"pravistatin",
+"pravastin",
+"pravastatine",
+"pravostatin"
+]
+},
+{
+"code": "4821",
+"description": "glipizide",
+"system": "RxNorm",
+"aliases": [
+"Glucotrol",
+"glipizid",
+"glypizide",
+"glipazide",
+"glipizyde"
+]
+},
+{
+"code": "25789",
+"description": "glimepiride",
+"system": "RxNorm",
+"aliases": [
+"Amaryl",
+"glimeperide",
+"glimepiramide",
+"glimiperide",
+"glimepiryde"
+]
+},
+{
+"code": "593411",
+"description": "sitagliptin",
+"system": "RxNorm",
+"aliases": [
+"Januvia",
+"sitaglipton",
+"sitaglyptin",
+"sitagliptan",
+"sitagliptine"
+]
+},
+{
+"code": "1488564",
+"description": "dapagliflozin",
+"system": "RxNorm",
+"aliases": [
+"Farxiga",
+"Forxiga",
+"dapaglifozin",
+"dapagliflazin",
+"dapagliflozen"
+]
+},
+{
+"code": "1545653",
+"description": "empagliflozin",
+"system": "RxNorm",
+"aliases": [
+"Jardiance",
+"empaglifozin",
+"empagliflazin",
+"empagliflozen",
+"empagaflozin"
+]
+},
+{
+"code": "475968",
+"description": "liraglutide",
+"system": "RxNorm",
+"aliases": [
+"Victoza",
+"Saxenda",
+"liraglutid",
+"liraglutyde",
+"liraglutaide"
+]
+},
+{
+"code": "1991302",
+"description": "semaglutide",
+"system": "RxNorm",
+"aliases": [
+"Ozempic",
+"Wegovy",
+"Rybelsus",
+"semaglutid",
+"semaglutyde",
+"semiglutide",
+"semaglutaide"
+]
+},
+{
+"code": "41126",
+"description": "fluticasone",
+"system": "RxNorm",
+"aliases": [
+"Flonase",
+"Flovent",
+"Arnuity",
+"fluticasone propionate",
+"fluticason",
+"fluticosone",
+"flucticasone"
+]
+},
+{
+"code": "8787",
+"description": "propranolol",
+"system": "RxNorm",
+"aliases": [
+"Inderal",
+"Hemangeol",
+"InnoPran",
+"propranalol",
+"proprananol",
+"proprenolol",
+"propanolol"
+]
+}
+]
