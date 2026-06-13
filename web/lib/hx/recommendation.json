@@ -1,0 +1,181 @@
+{
+  "method": "Attentive Neural Process \u2014 counterfactual, uncertainty-aware (trained on a synthetic cohort)",
+  "decision": "Your next appointment \u2014 the best follow-up for someone like you",
+  "disclaimer": "Synthetic demo. Outcomes are modeled from a synthetic cohort, not real patient data.",
+  "personas": [
+    {
+      "id": "maria",
+      "name": "Maria Reyes",
+      "summary": "58 \u00b7 depression on sertraline \u00b7 diabetes \u00b7 hypertension \u00b7 4 meds \u00b7 recent ER with a drug interaction",
+      "options": [
+        {
+          "name": "Integrated Med-Management Clinic",
+          "org": "Eastside Health",
+          "blurb": "Pharmacist + physician review every medicine together \u2014 built for interactions.",
+          "predicted": 73.0,
+          "ci": 5.4,
+          "p_good": 1.0,
+          "similar_n": 193,
+          "recommended": true,
+          "why": "You have a medication interaction and several active medicines \u2014 this option specializes in reviewing them together."
+        },
+        {
+          "name": "PCP Coordinated Care",
+          "org": "Eastside Family Medicine",
+          "blurb": "Dr. Chen coordinates your medicines across all your specialists.",
+          "predicted": 60.3,
+          "ci": 6.0,
+          "p_good": 0.06,
+          "similar_n": 16,
+          "recommended": false
+        },
+        {
+          "name": "Dr. Okafor (your psychiatrist)",
+          "org": "Bayview Behavioral Health",
+          "blurb": "Continue in person with the doctor who knows your history.",
+          "predicted": 53.6,
+          "ci": 7.0,
+          "p_good": 0.0,
+          "similar_n": 17,
+          "recommended": false
+        },
+        {
+          "name": "Community Mental Health Center",
+          "org": "County Health",
+          "blurb": "Lower cost and broad access; longer wait times.",
+          "predicted": 49.4,
+          "ci": 7.2,
+          "p_good": 0.0,
+          "similar_n": 15,
+          "recommended": false
+        },
+        {
+          "name": "Telehealth Psychiatry",
+          "org": "Cerulean Health",
+          "blurb": "Video medication-management visits, usually within days.",
+          "predicted": 49.2,
+          "ci": 6.7,
+          "p_good": 0.0,
+          "similar_n": 9,
+          "recommended": false
+        }
+      ]
+    },
+    {
+      "id": "james",
+      "name": "James Carter",
+      "summary": "72 \u00b7 severe depression \u00b7 rural \u00b7 uninsured \u00b7 misses appointments",
+      "options": [
+        {
+          "name": "Community Mental Health Center",
+          "org": "County Health",
+          "blurb": "Lower cost and broad access; longer wait times.",
+          "predicted": 60.9,
+          "ci": 5.8,
+          "p_good": 0.09,
+          "similar_n": 159,
+          "recommended": true,
+          "why": "Broad access matters most for your situation \u2014 the community center is the best fit."
+        },
+        {
+          "name": "Dr. Okafor (your psychiatrist)",
+          "org": "Bayview Behavioral Health",
+          "blurb": "Continue in person with the doctor who knows your history.",
+          "predicted": 57.1,
+          "ci": 5.5,
+          "p_good": 0.0,
+          "similar_n": 31,
+          "recommended": false
+        },
+        {
+          "name": "Integrated Med-Management Clinic",
+          "org": "Eastside Health",
+          "blurb": "Pharmacist + physician review every medicine together \u2014 built for interactions.",
+          "predicted": 56.1,
+          "ci": 5.6,
+          "p_good": 0.0,
+          "similar_n": 28,
+          "recommended": false
+        },
+        {
+          "name": "PCP Coordinated Care",
+          "org": "Eastside Family Medicine",
+          "blurb": "Dr. Chen coordinates your medicines across all your specialists.",
+          "predicted": 52.8,
+          "ci": 5.1,
+          "p_good": 0.0,
+          "similar_n": 11,
+          "recommended": false
+        },
+        {
+          "name": "Telehealth Psychiatry",
+          "org": "Cerulean Health",
+          "blurb": "Video medication-management visits, usually within days.",
+          "predicted": 52.5,
+          "ci": 6.6,
+          "p_good": 0.0,
+          "similar_n": 21,
+          "recommended": false
+        }
+      ]
+    },
+    {
+      "id": "ava",
+      "name": "Ava Nguyen",
+      "summary": "29 \u00b7 mild depression \u00b7 busy professional \u00b7 insured \u00b7 1 medication",
+      "options": [
+        {
+          "name": "Telehealth Psychiatry",
+          "org": "Cerulean Health",
+          "blurb": "Video medication-management visits, usually within days.",
+          "predicted": 83.4,
+          "ci": 5.9,
+          "p_good": 1.0,
+          "similar_n": 142,
+          "recommended": true,
+          "why": "You're insured and a bit far from in-person care \u2014 video visits get you seen fast."
+        },
+        {
+          "name": "Dr. Okafor (your psychiatrist)",
+          "org": "Bayview Behavioral Health",
+          "blurb": "Continue in person with the doctor who knows your history.",
+          "predicted": 74.6,
+          "ci": 6.0,
+          "p_good": 1.0,
+          "similar_n": 35,
+          "recommended": false
+        },
+        {
+          "name": "PCP Coordinated Care",
+          "org": "Eastside Family Medicine",
+          "blurb": "Dr. Chen coordinates your medicines across all your specialists.",
+          "predicted": 73.6,
+          "ci": 5.4,
+          "p_good": 1.0,
+          "similar_n": 10,
+          "recommended": false
+        },
+        {
+          "name": "Integrated Med-Management Clinic",
+          "org": "Eastside Health",
+          "blurb": "Pharmacist + physician review every medicine together \u2014 built for interactions.",
+          "predicted": 71.1,
+          "ci": 6.2,
+          "p_good": 0.97,
+          "similar_n": 32,
+          "recommended": false
+        },
+        {
+          "name": "Community Mental Health Center",
+          "org": "County Health",
+          "blurb": "Lower cost and broad access; longer wait times.",
+          "predicted": 71.1,
+          "ci": 6.5,
+          "p_good": 0.97,
+          "similar_n": 31,
+          "recommended": false
+        }
+      ]
+    }
+  ]
+}

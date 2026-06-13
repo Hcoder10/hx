@@ -42,6 +42,14 @@ export default function Timeline() {
         ＋ Add a visit (call Hx)
       </Link>
 
+      <Link
+        href="/app/next-appointment"
+        className="block rounded-2xl border border-teal-200 bg-white p-4 hover:border-teal-400"
+      >
+        <div className="font-semibold text-gray-900">🔎 Find your next appointment</div>
+        <p className="text-sm text-gray-600">See which care option works best for someone like you.</p>
+      </Link>
+
       <ul className="space-y-3">
         {visits.map((v) => (
           <li key={v.id}>
@@ -64,6 +72,7 @@ export default function Timeline() {
 
       <nav className="flex gap-4 pt-2 text-sm text-teal-700">
         <Link href="/app/medications">Medicines</Link>
+        <Link href="/app/next-appointment">Find care</Link>
       </nav>
     </main>
   );

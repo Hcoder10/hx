@@ -129,6 +129,7 @@ app.post("/twiml", async (req, res) => {
   </Connect>
 </Response>
 `;
+    console.log(`[${callId}] /twiml hit by Twilio -> ${streamUrl}`);
     res.end(twimlResponse);
   } catch (error) {
     res.status(500).send();
