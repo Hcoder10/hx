@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# env / secrets — NEVER commit real keys
+.env
+.env.*
+!.env.example
+
+# next.js / build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# vercel
+.vercel
+
+# local git repos / synthetic scratch (generated at runtime)
+.hx-local/
+/tmp/
+
+# logs & OS cruft
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
