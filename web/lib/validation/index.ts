@@ -27,13 +27,15 @@ export async function validateRecord(
   const chunked = chunkEncounter(e);
   const items: RawItem[] = chunked.sections.flatMap((s) => s.items);
 
-  const coded: CodedEntry[] = [];
-  for (const item of items) {
-    const candidates = retrieveCandidates(item);
-    const payload = buildFormatterInput(item, candidates);
-    const raw = await format(GROK_FORMATTER_PROMPT, payload);
-    coded.push(parseFormatterOutput(raw, item));
-  }
+  // Parallel: per-item format calls are independent; keeps latency ~1 call so the
+  // gate fits within serverless time limits even for many items.
+  const coded: CodedEntry[] = await Promise.all(
+    items.map(async (item) => {
+      const candidates = retrieveCandidates(item);
+      const raw = await format(GROK_FORMATTER_PROMPT, buildFormatterInput(item, candidates));
+      return parseFormatterOutput(raw, item);
+    }),
+  );
 
   return verifyEntries(coded);
 }

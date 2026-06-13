@@ -42,14 +42,16 @@ export async function POST(req: Request) {
   const chunked = chunkEncounter(enc);
   const items = chunked.sections.flatMap((s) => s.items);
 
-  const coded = [];
-  const topCandidate: (string | null)[] = [];
-  for (const item of items) {
-    const candidates = retrieveCandidates(item);
-    const raw = await formatWithGrok(GROK_FORMATTER_PROMPT, buildFormatterInput(item, candidates));
-    coded.push(parseFormatterOutput(raw, item));
-    topCandidate.push(candidates[0]?.code ?? null);
-  }
+  // Parallel: each item's Grok call is independent (keeps us under serverless limits).
+  const perItem = await Promise.all(
+    items.map(async (item) => {
+      const candidates = retrieveCandidates(item);
+      const raw = await formatWithGrok(GROK_FORMATTER_PROMPT, buildFormatterInput(item, candidates));
+      return { coded: parseFormatterOutput(raw, item), top: candidates[0]?.code ?? null };
+    }),
+  );
+  const coded = perItem.map((p) => p.coded);
+  const topCandidate: (string | null)[] = perItem.map((p) => p.top);
 
   // Optional: simulate the AI hallucinating a code, to show the verifier catch it
   // deterministically (independent of how Grok actually behaved).
