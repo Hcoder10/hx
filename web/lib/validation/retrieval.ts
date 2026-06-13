@@ -15,7 +15,11 @@ import { bestSimilarity, normalize, tokens } from "./text";
 //   2. The verifier becomes a pure containment+similarity gate (no search), which
 //      keeps it trivially deterministic and fast.
 
-const DEFAULT_K = 5;
+// The demo code sets are tiny (~100/system), so we hand Grok ALL of them (ranked
+// by lexical score) and let its semantics pick — robust to colloquial phrasing the
+// lexical scorer misses. At production scale (tens of thousands of codes) this won't
+// fit a prompt; that's where semantic retrieval (embeddings) becomes necessary.
+const DEFAULT_K = 150;
 
 // Score a single code entry against the term. The score blends:
 //   • bestSimilarity — fuzzy match vs description + aliases (the main signal)
@@ -51,10 +55,10 @@ export function retrieveCandidates(item: RawItem, k = DEFAULT_K): Candidate[] {
       a.code.localeCompare(b.code),
   );
 
-  // Drop zero-score noise but always return at least the top match (Grok may still
-  // legitimately abstain, and an empty candidate list is itself a useful signal).
-  const nonZero = scored.filter((c) => c.score > 0);
-  return (nonZero.length ? nonZero : scored).slice(0, k);
+  // Return all candidates (ranked), not just lexical hits: a colloquial term scores
+  // ~0 against the right code's description, so dropping zero-score entries would
+  // hide it from Grok. With a tiny set we can afford to pass them all.
+  return scored.slice(0, k);
 }
 
 // Convenience: retrieve candidates for every item in a chunked record, keyed for

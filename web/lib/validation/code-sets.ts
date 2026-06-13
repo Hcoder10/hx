@@ -12,7 +12,7 @@ import rawCodes from "./codes.json";
 export const ICD10: CodeEntry[] = [
   { system: "ICD10", code: "I10", description: "Essential (primary) hypertension", aliases: ["high blood pressure", "hypertension", "htn", "elevated blood pressure"] },
   { system: "ICD10", code: "E11.9", description: "Type 2 diabetes mellitus without complications", aliases: ["type 2 diabetes", "diabetes type 2", "t2dm", "adult onset diabetes"] },
-  { system: "ICD10", code: "F32.9", description: "Major depressive disorder, single episode, unspecified", aliases: ["depression", "low mood", "depressive episode", "major depression"] },
+  { system: "ICD10", code: "F32.9", description: "Major depressive disorder, single episode, unspecified", aliases: ["depression", "low mood", "depressive episode", "major depression", "feeling down", "feeling really down", "feeling low", "down lately", "sad", "feeling sad"] },
   { system: "ICD10", code: "R07.9", description: "Chest pain, unspecified", aliases: ["chest pain", "chest discomfort"] },
   { system: "ICD10", code: "M79.1", description: "Myalgia", aliases: ["muscular pain", "muscle pain", "musculoskeletal pain", "muscular chest pain"] },
 ];
