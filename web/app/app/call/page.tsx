@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CallClient from "./CallClient";
 
 export default function Call() {
   return (
@@ -8,13 +9,10 @@ export default function Call() {
       </Link>
       <h1 className="text-xl font-bold text-gray-900">Talk to Hx</h1>
       <p className="text-gray-600">
-        After any visit, call the Hx number and just say what happened — in any language. We’ll add
-        it to your story and check it against everything else.
+        After any visit, just say what happened — in any language. Hx adds it to your story and
+        checks it against everything else.
       </p>
-      <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-full bg-teal-100 text-5xl">
-        🎙️
-      </div>
-      <p className="text-sm text-gray-400">Voice agent wiring coming next (Grok Voice).</p>
+      <CallClient />
     </main>
   );
 }
