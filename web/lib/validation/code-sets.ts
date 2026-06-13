@@ -1,4 +1,5 @@
 import { CodeEntry, CodeSystem, SectionKind } from "./model";
+import rawCodes from "./codes.json";
 
 // Tiny SYNTHETIC subsets of real public code systems — just enough to exercise
 // the pipeline honestly against the demo patient (Maria Reyes). These mirror the
@@ -47,9 +48,27 @@ export const SECTION_SYSTEM: Record<SectionKind, CodeSystem> = {
   allergies: "UNII",
 };
 
+// Expand the curated demo sets with the broader public code dump (codes.json) so
+// common real drugs/conditions (e.g. atorvastatin) get coded instead of falling to
+// manual review — while genuine unknowns / hallucinated codes are still refused.
+const SYS_ALIAS: Record<string, CodeSystem> = {
+  "ICD-10-CM": "ICD10",
+  RxNorm: "RXNORM",
+  ICD10: "ICD10",
+  RXNORM: "RXNORM",
+};
+type RawCode = { code: string; description: string; system: string; aliases?: string[] };
+function withExtras(base: CodeEntry[], system: CodeSystem): CodeEntry[] {
+  const have = new Set(base.map((c) => c.code.toUpperCase()));
+  const extra = (rawCodes as RawCode[])
+    .filter((c) => SYS_ALIAS[c.system] === system && !have.has(c.code.toUpperCase()))
+    .map((c): CodeEntry => ({ system, code: c.code, description: c.description, aliases: c.aliases ?? [] }));
+  return [...base, ...extra];
+}
+
 const BY_SYSTEM: Record<CodeSystem, CodeEntry[]> = {
-  ICD10,
-  RXNORM,
+  ICD10: withExtras(ICD10, "ICD10"),
+  RXNORM: withExtras(RXNORM, "RXNORM"),
   LOINC,
   UNII,
 };
