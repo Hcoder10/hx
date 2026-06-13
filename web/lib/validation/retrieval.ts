@@ -1,31 +1,54 @@
-import { Candidate, CodeEntry, RawItem } from "./model";
+import { Candidate, CodeEntry, CodeSystem, RawItem } from "./model";
 import { codeSet } from "./code-sets";
 import { bestSimilarity, normalize, tokens } from "./text";
 
 // STAGE 2 — RETRIEVE
 //
-// For one free-text RawItem, find the top-K candidate public codes to hand to
-// Grok. Pure, dependency-free RAG: lexical token overlap + fuzzy (bigram/Jaccard)
-// matching over each code's canonical description AND its aliases. No embeddings,
-// no index build — the code sets are tiny, so a linear scan with a good scorer is
-// both correct and instant.
+// For one free-text RawItem, find the top-K candidate public codes to hand to the
+// formatter LLM. Pure, dependency-free RAG: lexical token overlap + fuzzy
+// (bigram/Jaccard) matching over each code's description AND aliases.
 //
-// Why retrieve at all if the verifier re-checks later? Two reasons:
-//   1. It constrains Grok to real codes, cutting hallucination at the source.
-//   2. The verifier becomes a pure containment+similarity gate (no search), which
-//      keeps it trivially deterministic and fast.
+// Two regimes, picked by set size:
+//   • SMALL set (RxNorm/LOINC/UNII, ~hundreds): score every entry — a linear scan
+//     is instant and maximally recall-friendly.
+//   • BIG set (ICD-10-CM, ~71.7k): an inverted index (token -> code ids) built once
+//     prefilters to entries that share a token with the term, then we fuzzy-score
+//     only those. Scoring all 71.7k per item would be too slow on serverless.
+//
+// A purely lexical term that shares NO token with the right code (colloquial
+// phrasing like "wants to kill themselves") yields a weak/empty result here — that
+// is intentional: the pipeline (index.ts) detects the weak score and asks the LLM
+// to rewrite the term into a clinical phrase, then retrieves again. So this stage
+// stays pure and deterministic; the LLM only supplies vocabulary, never codes.
 
-// The demo code sets are tiny (~100/system), so we hand Grok ALL of them (ranked
-// by lexical score) and let its semantics pick — robust to colloquial phrasing the
-// lexical scorer misses. At production scale (tens of thousands of codes) this won't
-// fit a prompt; that's where semantic retrieval (embeddings) becomes necessary.
-const DEFAULT_K = 150;
+const DEFAULT_K = 25;
+const SMALL_SET = 600; // at/below this, score every entry (no index needed)
+const PREFILTER = 300; // fuzzy-score at most this many overlap candidates
+const COMMON_DF = 6000; // ignore tokens appearing in more entries than this (e.g. "unspecified")
 
-// Score a single code entry against the term. The score blends:
-//   • bestSimilarity — fuzzy match vs description + aliases (the main signal)
-//   • lexical bonus  — fraction of the term's tokens that appear verbatim in the
-//                      description/aliases (rewards exact word hits like "diabetes")
-// Deterministic; same term + entry always yields the same number.
+type InvertedIndex = { entries: CodeEntry[]; postings: Map<string, number[]> };
+const indexCache = new Map<CodeSystem, InvertedIndex>();
+
+function indexFor(system: CodeSystem): InvertedIndex {
+  const cached = indexCache.get(system);
+  if (cached) return cached;
+  const entries = codeSet(system);
+  const postings = new Map<string, number[]>();
+  entries.forEach((e, i) => {
+    const haystack = normalize([e.description, ...(e.aliases ?? [])].join(" "));
+    for (const t of new Set(haystack.split(" ").filter(Boolean))) {
+      let arr = postings.get(t);
+      if (!arr) postings.set(t, (arr = []));
+      arr.push(i);
+    }
+  });
+  const built = { entries, postings };
+  indexCache.set(system, built);
+  return built;
+}
+
+// Score a single code entry against the term: fuzzy match vs description + aliases
+// (main signal) blended with a lexical bonus for verbatim token hits. Deterministic.
 function scoreEntry(term: string, entry: CodeEntry): number {
   const fuzzy = bestSimilarity(term, entry.description, entry.aliases);
 
@@ -35,34 +58,43 @@ function scoreEntry(term: string, entry: CodeEntry): number {
   const hits = termTokens.filter((t) => haySet.has(t)).length;
   const lexical = termTokens.length ? hits / termTokens.length : 0;
 
-  // Weighted blend, fuzzy-dominant. Clamp to [0,1].
   return Math.min(1, 0.7 * fuzzy + 0.3 * lexical);
 }
 
 // Top-K candidates for one item, sorted by score desc. Ties broken by shorter
 // description (more specific) then code, so ordering is fully deterministic.
 export function retrieveCandidates(item: RawItem, k = DEFAULT_K): Candidate[] {
-  const term = item.text;
-  const scored: Candidate[] = codeSet(item.system).map((entry) => ({
-    ...entry,
-    score: scoreEntry(term, entry),
-  }));
+  const { entries, postings } = indexFor(item.system);
 
+  // Choose the candidate pool: full scan for small sets, token-overlap prefilter
+  // for big ones.
+  let pool: number[];
+  if (entries.length <= SMALL_SET) {
+    pool = entries.map((_, i) => i);
+  } else {
+    const overlap = new Map<number, number>();
+    for (const t of new Set(tokens(item.text))) {
+      const arr = postings.get(t);
+      if (!arr || arr.length > COMMON_DF) continue; // skip too-common (noise) tokens
+      for (const i of arr) overlap.set(i, (overlap.get(i) ?? 0) + 1);
+    }
+    pool = [...overlap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, PREFILTER)
+      .map(([i]) => i);
+  }
+
+  const scored: Candidate[] = pool.map((i) => ({ ...entries[i], score: scoreEntry(item.text, entries[i]) }));
   scored.sort(
     (a, b) =>
       b.score - a.score ||
       a.description.length - b.description.length ||
       a.code.localeCompare(b.code),
   );
-
-  // Return all candidates (ranked), not just lexical hits: a colloquial term scores
-  // ~0 against the right code's description, so dropping zero-score entries would
-  // hide it from Grok. With a tiny set we can afford to pass them all.
   return scored.slice(0, k);
 }
 
-// Convenience: retrieve candidates for every item in a chunked record, keyed for
-// the formatter prompt. Returns a flat list preserving section + provenance.
+// Convenience: retrieve candidates for every item in a chunked record.
 export function retrieveAll(
   items: RawItem[],
   k = DEFAULT_K,

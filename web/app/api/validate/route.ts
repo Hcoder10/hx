@@ -1,6 +1,6 @@
 import {
   chunkEncounter,
-  retrieveCandidates,
+  retrieveWithRewrite,
   buildFormatterInput,
   parseFormatterOutput,
   verifyEntries,
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   // Parallel: each item's Grok call is independent (keeps us under serverless limits).
   const perItem = await Promise.all(
     items.map(async (item) => {
-      const candidates = retrieveCandidates(item);
+      const candidates = await retrieveWithRewrite(item, formatWithGrok);
       const raw = await formatWithGrok(GROK_FORMATTER_PROMPT, buildFormatterInput(item, candidates));
       return { coded: parseFormatterOutput(raw, item), top: candidates[0]?.code ?? null };
     }),

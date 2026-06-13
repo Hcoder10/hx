@@ -33,11 +33,34 @@ Rules — follow EXACTLY:
 3. "term" MUST be the plain human term the chosen code stands for — use the candidate's description (or a faithful normalization of "text"). Do NOT put a code, abbreviation, or invented label in "term".
 4. Do NOT add, drop, or alter any value in "fields". Copy it through unchanged.
 5. Match meaning, not surface spelling. "high blood pressure (hypertension)" matches an "Essential (primary) hypertension" candidate. "muscular chest pain" describing pain ruled non-cardiac matches "Myalgia", not "Chest pain", only if the candidates support it.
-6. Prefer the most specific correct candidate over a vaguer one.
-7. Output ONLY a single JSON object, no prose, no code fences, in EXACTLY this shape:
+6. Prefer the most specific candidate the text actually SUPPORTS. For a general lay term, pick the general / "unspecified" form (e.g. "the flu" -> an unspecified influenza code; "kidney infection" -> "Acute pyelonephritis", NOT a pregnancy-specific one). Do not invent specificity the text doesn't state.
+7. NEVER choose a candidate scoped to pregnancy, childbirth, the puerperium, the newborn/perinatal period, a screening/exposure/contact "encounter", or an external cause (injury mechanism) UNLESS the text explicitly says so. A plain symptom or disease name maps to the plain diagnosis code.
+8. Output ONLY a single JSON object, no prose, no code fences, in EXACTLY this shape:
 { "section": "...", "system": "...", "code": "...", "term": "...", "fields": { ... } }
 
 Remember: a downstream deterministic verifier will reject your entry unless the code exists in the public code set AND its official description fuzzy-matches your "term". So pick a real candidate whose description genuinely matches, or abstain.`;
+
+// QUERY REWRITE prompt (used only when lexical retrieval over the full code set
+// finds nothing strong — i.e. the input is colloquial). The model translates the
+// casual phrasing into the standard clinical term so the SAME pure lexical
+// retrieval can surface the right candidates. The model supplies vocabulary only;
+// it never names a code, and the verifier still gates whatever gets coded.
+export const GROK_REWRITE_PROMPT = `You translate a patient's or provider's casual phrasing of a health problem, medication, allergy, or vital sign into the standard CLINICAL term used in medical coding (ICD-10-CM / RxNorm / LOINC).
+
+You receive a JSON object: { "text": "...the casual phrasing..." }
+
+Reply with ONLY the clinical term(s) as a short phrase. No code, no explanation, no quotes, no punctuation beyond what the term needs. If the text is already a clinical term, return it unchanged. If you genuinely cannot map it, repeat the input text.
+
+Examples:
+{"text":"wants to kill themselves"} -> suicidal ideation
+{"text":"feeling really down lately"} -> major depressive disorder
+{"text":"can't stop worrying"} -> generalized anxiety disorder
+{"text":"high BP"} -> essential hypertension
+{"text":"sugar problem"} -> type 2 diabetes mellitus
+{"text":"water pill"} -> hydrochlorothiazide
+{"text":"heart racing"} -> tachycardia
+{"text":"trouble breathing"} -> dyspnea
+{"text":"can't sleep"} -> insomnia`;
 
 // Build the per-item user payload Grok sees. One item per call keeps each decision
 // isolated and the prompt small (cheap + steerable for the 9B model later).
