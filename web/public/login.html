@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in · Hx</title>
+  <meta name="description" content="Sign in to Hx — your health history, version-controlled." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    /* login page — local styles only (no edits to shared styles.css) */
+    .login-main{ min-height:calc(100vh - 70px); display:grid; place-items:center; padding:48px 0 64px; }
+    .login-card{
+      width:100%; max-width:480px; background:#fff; border:1px solid var(--line);
+      border-radius:var(--r-xl); box-shadow:var(--sh-lg); padding:clamp(28px,4vw,40px);
+    }
+    .login-mark{ display:flex; align-items:center; gap:11px; justify-content:center; margin-bottom:8px; }
+    .login-mark img{ width:42px; height:42px; }
+    .login-mark b{ font-size:1.5rem; font-weight:800; color:var(--ink-900); letter-spacing:-.04em; }
+    .login-card h1{ font-size:clamp(1.5rem,3vw,1.9rem); text-align:center; letter-spacing:-.03em; }
+    .login-card .sub{ margin-top:10px; text-align:center; color:var(--ink-600); font-size:1rem; }
+    .login-roles{ margin-top:26px; display:flex; flex-direction:column; gap:12px; }
+    .role-btn{
+      display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+      padding:14px 16px; border-radius:var(--r); border:1px solid var(--line);
+      background:#fff; box-shadow:var(--sh-xs); color:var(--ink-800);
+      transition:transform .15s var(--ease), box-shadow .2s var(--ease), border-color .2s, background .2s;
+    }
+    .role-btn:hover{ transform:translateY(-2px); box-shadow:var(--sh-md); border-color:var(--blue-100); background:var(--surface-2); }
+    .role-btn:disabled{ opacity:.65; cursor:default; transform:none; box-shadow:var(--sh-xs); }
+    .role-btn .rav{ width:46px; height:46px; border-radius:50%; flex:0 0 auto; display:grid; place-items:center; color:#fff; font-weight:800; font-size:1.05rem; }
+    .role-btn .rtxt b{ display:block; color:var(--ink-900); font-size:1rem; font-weight:700; }
+    .role-btn .rtxt span{ display:block; font-size:.84rem; color:var(--ink-500); margin-top:1px; }
+    .role-btn .rarrow{ margin-left:auto; color:var(--ink-300); display:flex; }
+    .role-btn .rarrow svg{ width:20px; height:20px; }
+    .role-btn:hover .rarrow{ color:var(--blue-500); }
+    .login-or{ display:flex; align-items:center; gap:14px; margin:22px 0 4px; color:var(--ink-400); font-size:.8rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .login-or::before,.login-or::after{ content:""; flex:1; height:1px; background:var(--line); }
+    .passkey-btn{ width:100%; margin-top:8px; }
+    .passkey-hint{ margin-top:9px; text-align:center; font-size:.78rem; color:var(--ink-400); }
+    .login-other{ margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+    .login-other .ot-head{ font-size:.78rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-500); margin-bottom:12px; }
+    .login-other .ot-row{ display:flex; flex-wrap:wrap; gap:9px; }
+    .ot-pill{
+      display:inline-flex; align-items:center; gap:9px; padding:8px 13px;
+      border-radius:var(--pill); border:1px solid var(--line); background:#fff;
+      font-size:.85rem; font-weight:600; color:var(--ink-700); box-shadow:var(--sh-xs);
+      transition:border-color .15s, background .15s, color .15s;
+    }
+    .ot-pill:hover{ border-color:var(--ink-300); background:var(--surface-2); color:var(--ink-900); }
+    .ot-pill:disabled{ opacity:.6; cursor:default; }
+    .ot-pill .otav{ width:26px; height:26px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; font-size:.74rem; }
+    .login-msg{ margin-top:16px; min-height:20px; text-align:center; font-size:.88rem; }
+    .login-msg.err{ color:var(--danger-600); }
+    .login-msg.busy{ color:var(--blue-600); }
+    .login-synth{ margin-top:22px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:.8rem; color:var(--green-700); font-weight:600; }
+    .login-synth svg{ width:15px; height:15px; }
+    .login-back{ display:block; text-align:center; margin-top:18px; }
+  </style>
+</head>
+<body>
+  <div class="bg-aura"></div>
+  <div class="bg-dots"></div>
+
+  <!-- NAV -->
+  <header class="nav scrolled">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="brand"><img src="assets/img/logo-mark.svg" alt="Hx logo" /> Hx</a>
+      <div class="nav-actions" style="margin-left:auto">
+        <a href="index.html" class="signin">Back to home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <main class="login-main">
+    <div class="wrap">
+      <div class="login-card">
+        <div class="login-mark"><img src="assets/img/logo-mark.svg" alt="" /><b>Hx</b></div>
+        <h1>Welcome back</h1>
+        <p class="sub">Your health history, version&#8209;controlled. Pick how you'd like to continue.</p>
+
+        <div class="login-roles">
+          <button class="role-btn" id="btn-maria" data-user="maria">
+            <span class="rav" style="background:linear-gradient(135deg,var(--green-500),var(--green-700))">M</span>
+            <span class="rtxt"><b>Continue as Maria</b><span>Patient · owns her health record</span></span>
+            <span class="rarrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+
+          <button class="role-btn" id="btn-okafor" data-user="okafor">
+            <span class="rav" style="background:linear-gradient(135deg,var(--blue-500),var(--blue-700))">O</span>
+            <span class="rtxt"><b>Continue as Dr. Okafor</b><span>Psychiatrist · sees records shared with her</span></span>
+            <span class="rarrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+        </div>
+
+        <div class="login-or">or</div>
+        <button class="btn btn-ghost btn-block passkey-btn" disabled aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M12 11a4 4 0 1 0-4-4M3 21a7 7 0 0 1 9.5-6.5M16 16l2 2 4-4"/><circle cx="12" cy="7" r="0"/></svg>
+          Sign in with Face ID
+        </button>
+        <p class="passkey-hint">Passkey sign-in is coming soon. Use a demo account above to explore.</p>
+
+        <div class="login-other">
+          <div class="ot-head">Other demo accounts</div>
+          <div class="ot-row">
+            <button class="ot-pill" data-user="chen">
+              <span class="otav" style="background:linear-gradient(135deg,var(--blue-400),var(--blue-600))">C</span>
+              Dr. Chen · Primary care
+            </button>
+            <button class="ot-pill" data-user="er">
+              <span class="otav" style="background:linear-gradient(135deg,#e8896b,#d8453b)">ER</span>
+              Mercy General ER
+            </button>
+          </div>
+        </div>
+
+        <div class="login-msg" id="login-msg" role="status" aria-live="polite"></div>
+
+        <div class="login-synth">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Synthetic data only · No real patient information
+        </div>
+        <a href="index.html" class="backlink login-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:15px;height:15px"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+          Back to home
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/hx-api.js"></script>
+  <script src="assets/js/login.js"></script>
+</body>
+</html>

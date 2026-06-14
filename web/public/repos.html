@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your records · Hx</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    /* repos list — local styles only (no edits to shared styles.css) */
+    .repos-head{ display:flex; align-items:flex-start; flex-wrap:wrap; gap:16px; padding-top:30px; }
+    .repos-head .ttl h1{ font-size:clamp(1.5rem,3vw,2rem); letter-spacing:-.03em; }
+    .repos-head .ttl p{ margin-top:8px; color:var(--ink-600); font-size:1rem; max-width:52ch; }
+    .repos-head .ha{ margin-left:auto; display:flex; gap:9px; flex-wrap:wrap; }
+
+    .repo-grid{ margin-top:26px; padding-bottom:64px; display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+    .repo-card{
+      display:flex; flex-direction:column; gap:12px; padding:20px 22px;
+      border:1px solid var(--line); border-radius:var(--r-lg); background:#fff;
+      box-shadow:var(--sh-sm);
+      transition:transform .2s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+    }
+    .repo-card:hover{ transform:translateY(-3px); box-shadow:var(--sh-md); border-color:var(--blue-100); }
+    .repo-card .rc-top{ display:flex; align-items:center; gap:11px; }
+    .repo-card .rc-ico{ width:34px; height:34px; border-radius:9px; flex:0 0 auto; display:grid; place-items:center; background:var(--green-50); color:var(--green-700); }
+    .repo-card .rc-ico svg{ width:17px; height:17px; }
+    .repo-card .rc-path{ font-size:1.06rem; min-width:0; }
+    .repo-card .rc-path .owner{ color:var(--blue-600); font-weight:600; }
+    .repo-card .rc-path .slash{ color:var(--ink-300); }
+    .repo-card .rc-path .name{ color:var(--blue-600); font-weight:800; }
+    .repo-card .rc-desc{ color:var(--ink-600); font-size:.94rem; min-height:1.4em; }
+    .repo-card .rc-meta{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:.84rem; color:var(--ink-500); margin-top:2px; }
+    .repo-card .rc-meta .m{ display:inline-flex; align-items:center; gap:6px; }
+    .repo-card .rc-meta .m svg{ width:14px; height:14px; color:var(--ink-400); }
+
+    .empty{ grid-column:1/-1; text-align:center; padding:56px 24px; border:1px dashed var(--line); border-radius:var(--r-lg); background:var(--surface-2); }
+    .empty .em-ico{ width:56px; height:56px; margin:0 auto 14px; border-radius:14px; display:grid; place-items:center; background:#fff; border:1px solid var(--line); color:var(--blue-500); }
+    .empty .em-ico svg{ width:26px; height:26px; }
+    .empty h3{ font-size:1.15rem; }
+    .empty p{ margin:8px auto 0; max-width:42ch; color:var(--ink-600); font-size:.95rem; }
+    .empty .em-cta{ margin-top:18px; }
+
+    .skeleton{ grid-column:1/-1; display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+    .sk-card{ height:138px; border:1px solid var(--line); border-radius:var(--r-lg); background:linear-gradient(100deg,var(--surface-2) 30%,var(--surface-3) 50%,var(--surface-2) 70%); background-size:200% 100%; animation:sk 1.3s var(--ease) infinite; }
+    @keyframes sk{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+
+    .who-banner{ margin-top:22px; display:flex; align-items:center; gap:14px; padding:14px 18px; border:1px solid var(--blue-100); background:var(--blue-50); border-radius:var(--r); }
+    .who-banner svg{ width:22px; height:22px; color:var(--blue-600); flex:0 0 auto; }
+    .who-banner b{ color:var(--ink-900); } .who-banner p{ font-size:.9rem; color:var(--ink-600); }
+    .who-banner .btn{ margin-left:auto; white-space:nowrap; }
+
+    .signout-btn{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:#fff; border-radius:var(--r-sm); padding:8px 13px; font-size:.86rem; font-weight:600; color:var(--ink-700); }
+    .signout-btn:hover{ border-color:var(--ink-300); background:var(--surface-2); }
+    .signout-btn svg{ width:16px; height:16px; color:var(--ink-500); }
+    .user-chip{ display:inline-flex; align-items:center; gap:9px; }
+    .user-chip .uname{ font-size:.88rem; font-weight:600; color:var(--ink-800); }
+    .user-chip .urole{ display:block; font-size:.72rem; color:var(--ink-500); font-weight:500; }
+    @media (max-width:760px){ .repo-grid,.skeleton{ grid-template-columns:1fr; } }
+    @media (max-width:620px){ .user-chip .uname,.user-chip .urole{ display:none; } }
+  </style>
+</head>
+<body>
+  <div class="bg-aura" style="position:fixed;opacity:.5"></div>
+
+  <!-- APP BAR -->
+  <header class="appbar">
+    <div class="appbar-inner">
+      <a href="index.html" class="brand"><img src="assets/img/logo-mark.svg" alt="Hx" /> Hx</a>
+      <label class="app-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search your records…" id="repo-search" />
+        <kbd>/</kbd>
+      </label>
+      <div class="app-actions">
+        <a href="#" class="user-chip" id="user-chip">
+          <span class="av-mono av-ring" id="user-av" style="width:36px;height:36px;font-size:.92rem;background:linear-gradient(135deg,var(--green-500),var(--green-700))"></span>
+          <span><span class="uname" id="user-name">…</span><span class="urole" id="user-role"></span></span>
+        </a>
+        <button class="signout-btn" id="signout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="repo-shell">
+    <!-- HEADER -->
+    <div class="repos-head">
+      <div class="ttl">
+        <span class="eyebrow green" id="repos-eyebrow">Your records</span>
+        <h1 id="repos-title">Your health, as repositories</h1>
+        <p id="repos-sub">Each thread of visits is its own repo. Open one to see the full history.</p>
+      </div>
+      <div class="ha" id="header-actions"><!-- filled by JS (patient gets New thread) --></div>
+    </div>
+
+    <!-- patient-only: manage access banner (filled by JS) -->
+    <div id="who-slot"></div>
+
+    <!-- REPO LIST -->
+    <div class="repo-grid" id="repo-grid">
+      <div class="skeleton">
+        <div class="sk-card"></div><div class="sk-card"></div>
+        <div class="sk-card"></div><div class="sk-card"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-foot">
+    <span class="synth">🛡 Synthetic data only · No real patient information</span> &nbsp;·&nbsp; Hx — your health, version-controlled.
+  </footer>
+
+  <script src="assets/js/hx-api.js"></script>
+  <script src="assets/js/repos.js"></script>
+</body>
+</html>

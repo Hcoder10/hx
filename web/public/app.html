@@ -3,9 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>maria-reyes / health · Hx</title>
+  <title>Hx · your health, version-controlled</title>
   <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    /* Page-local styles only (shared styles.css is never edited). */
+    .hx-tabpanel{ display:none; }
+    .hx-tabpanel.active{ display:block; }
+    .hx-skel{ color:var(--ink-400); font-size:.9rem; padding:14px 16px; }
+    .hx-empty{ color:var(--ink-500); font-size:.92rem; padding:18px 16px; text-align:center; }
+
+    /* Timeline (commit log) */
+    .tl{ display:flex; flex-direction:column; }
+    .tl-item{ border:1px solid var(--line); border-radius:var(--r); background:#fff; box-shadow:var(--sh-xs); margin-bottom:12px; overflow:hidden; }
+    .tl-head{ display:flex; align-items:center; gap:12px; padding:13px 16px; cursor:pointer; }
+    .tl-head:hover{ background:var(--surface-2); }
+    .tl-dot{ width:30px; height:30px; border-radius:50%; display:grid; place-items:center; color:#fff; flex:0 0 auto; font-size:.8rem; font-weight:700; background:linear-gradient(135deg,var(--blue-400),var(--blue-600)); }
+    .tl-main{ flex:1; min-width:0; }
+    .tl-main b{ color:var(--ink-900); font-size:.95rem; display:block; }
+    .tl-main span{ color:var(--ink-500); font-size:.82rem; }
+    .tl-meta{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+    .tl-meta .sha{ font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--ink-400); background:var(--surface-3); border-radius:var(--pill); padding:2px 9px; }
+    .tl-meta .when{ font-size:.8rem; color:var(--ink-400); white-space:nowrap; }
+    .tl-body{ display:none; padding:2px 16px 16px 58px; border-top:1px solid var(--line-2); }
+    .tl-item.open .tl-body{ display:block; }
+    .tl-body .sum{ font-size:.92rem; color:var(--ink-700); margin:12px 0; }
+    .tl-notes{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:7px; }
+    .tl-notes li{ display:flex; gap:9px; align-items:flex-start; font-size:.88rem; color:var(--ink-700); }
+    .tl-notes li::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--green-500); margin-top:7px; flex:0 0 auto; }
+    .tl-notes li.neg::before{ background:var(--ink-300); }
+
+    /* Files tab */
+    .filecard{ border:1px solid var(--line); border-radius:var(--r); background:#fff; box-shadow:var(--sh-xs); margin-bottom:14px; overflow:hidden; }
+    .filecard-head{ display:flex; align-items:center; gap:10px; padding:11px 16px; background:var(--surface-2); border-bottom:1px solid var(--line); font-size:.9rem; }
+    .filecard-head .fn{ font-weight:600; color:var(--ink-800); }
+    .filecard-head .dl{ margin-left:auto; color:var(--blue-600); font-weight:600; font-size:.82rem; display:inline-flex; align-items:center; gap:5px; }
+    .filecard-head .dl:hover{ color:var(--blue-700); }
+    .filecard pre{ margin:0; padding:16px; font-family:'JetBrains Mono',monospace; font-size:.84rem; line-height:1.6; color:var(--ink-700); white-space:pre-wrap; word-break:break-word; }
+
+    /* Codes tab */
+    .codes-cap{ font-size:.86rem; color:var(--ink-500); margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+    .codes-grp{ margin-bottom:20px; }
+    .codes-grp h4{ color:var(--ink-800); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; margin:0 0 8px; font-weight:700; }
+    .codes-table{ width:100%; border-collapse:collapse; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:#fff; box-shadow:var(--sh-xs); }
+    .codes-table th{ text-align:left; font-size:.74rem; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-500); font-weight:700; padding:9px 14px; background:var(--surface-2); border-bottom:1px solid var(--line); }
+    .codes-table td{ padding:11px 14px; font-size:.88rem; color:var(--ink-700); border-bottom:1px solid var(--line-2); vertical-align:top; }
+    .codes-table tr:last-child td{ border-bottom:0; }
+    .codes-table .term{ color:var(--ink-900); font-weight:600; }
+    .codes-table .code{ font-family:'JetBrains Mono',monospace; color:var(--blue-700); font-weight:600; white-space:nowrap; }
+    .codes-table .sys{ font-size:.74rem; color:var(--ink-400); }
+    .code-ok{ color:var(--green-700); font-weight:700; font-size:.78rem; }
+    .code-flag{ color:var(--danger-700); font-weight:700; font-size:.78rem; }
+
+    /* Inline forms (add visit, sharing) */
+    .hx-form{ border:1px solid var(--line); border-radius:var(--r); background:#fff; box-shadow:var(--sh-sm); padding:18px 20px; margin-bottom:16px; }
+    .hx-form h4{ color:var(--ink-900); font-size:1rem; margin:0 0 4px; }
+    .hx-form .hint{ font-size:.84rem; color:var(--ink-500); margin:0 0 14px; }
+    .hx-form .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .hx-field{ display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+    .hx-field label{ font-size:.76rem; letter-spacing:.04em; text-transform:uppercase; font-weight:700; color:var(--ink-500); }
+    .hx-input{ font:inherit; font-size:.92rem; padding:9px 12px; border:1px solid var(--line); border-radius:var(--r-sm); color:var(--ink-900); background:#fff; width:100%; }
+    .hx-input:focus{ outline:none; border-color:var(--blue-500); box-shadow:0 0 0 3px var(--blue-50); }
+    textarea.hx-input{ resize:vertical; min-height:64px; }
+    .hx-form-actions{ display:flex; gap:9px; align-items:center; margin-top:6px; }
+    .hx-form-msg{ font-size:.84rem; margin-left:auto; }
+    .hx-form-msg.ok{ color:var(--green-700); }
+    .hx-form-msg.err{ color:var(--danger-700); }
+    .hx-subhead{ font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500); font-weight:700; margin:16px 0 8px; }
+
+    /* Sharing list rows */
+    .share-row{ display:flex; align-items:center; gap:11px; padding:10px 0; border-bottom:1px solid var(--line-2); font-size:.88rem; }
+    .share-row:last-child{ border-bottom:0; }
+    .share-row .who{ color:var(--ink-900); font-weight:600; }
+    .share-row .lvl{ font-size:.72rem; background:var(--surface-3); color:var(--ink-600); border-radius:var(--pill); padding:2px 9px; font-weight:600; }
+    .share-row .lvl.write{ background:var(--green-50); color:var(--green-700); }
+    .share-row .rm{ margin-left:auto; color:var(--danger-600); font-weight:600; font-size:.8rem; cursor:pointer; background:none; border:0; }
+    .share-row .lnk{ font-family:'JetBrains Mono',monospace; font-size:.76rem; color:var(--ink-500); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:0; }
+    .copy-btn{ cursor:pointer; }
+  </style>
 </head>
 <body>
   <div class="bg-aura" style="position:fixed;opacity:.5"></div>
@@ -22,10 +97,10 @@
       <div class="app-actions">
         <button class="icon-btn" aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-          <span class="ndot">1</span>
+          <span class="ndot" id="ndot" style="display:none"></span>
         </button>
         <button class="icon-btn" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><path d="M12 5v14M5 12h14"/></svg></button>
-        <img class="av av-ring" src="assets/img/avatar-maria.png" alt="Maria Reyes" style="width:36px;height:36px" />
+        <span class="av av-mono" id="userAvatar" style="width:36px;height:36px;background:linear-gradient(135deg,var(--blue-400),var(--blue-600))"></span>
       </div>
     </div>
   </header>
@@ -35,32 +110,30 @@
     <div class="repo-titlebar">
       <div class="repo-path">
         <span class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-        <span class="owner">maria-reyes</span><span class="slash">/</span><span class="name">health</span>
+        <span class="owner" id="repoOwner">—</span><span class="slash">/</span><span class="name" id="repoName">—</span>
       </div>
-      <span class="vis-pill">Private · yours</span>
+      <span class="vis-pill" id="repoVis">Private</span>
       <div class="repo-actions">
-        <a href="#" class="gh-btn accent soon"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg> Call Hx</span></a>
-        <a href="#" class="gh-btn soon"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg> Share</span><span class="cnt">2</span></a>
-        <a href="#" class="gh-btn soon"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</span></a>
+        <a href="#" class="gh-btn accent" id="callHxBtn"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg> Call Hx</span></a>
+        <a href="#" class="gh-btn" id="shareBtn"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg> Share</span><span class="cnt" id="shareCount">0</span></a>
+        <a class="gh-btn" id="exportAllBtn" href="#"><span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</span></a>
       </div>
     </div>
 
     <!-- TABS -->
     <nav class="repo-tabs">
-      <a href="app.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Timeline</a>
-      <a href="#" class="soon mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/></svg> Medicines <span class="tabnum">4</span></a>
-      <a href="#" class="soon mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Problems <span class="tabnum">2</span></a>
-      <a href="#" class="soon mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.7s6 5.7 6 10.3a6 6 0 0 1-12 0C6 8.4 12 2.7 12 2.7z"/></svg> Allergies <span class="tabnum">1</span></a>
-      <a href="safety.html" class="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Safety <span class="tabnum">1</span></a>
-      <a href="#" class="soon mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg> History</a>
+      <a href="#" class="active" data-tab="timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Timeline <span class="tabnum" id="tabTimelineNum">0</span></a>
+      <a href="#" data-tab="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> Files</a>
+      <a href="#" data-tab="codes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg> Codes</a>
+      <a href="safety.html" class="danger" id="safetyTab" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Safety <span class="tabnum" id="tabSafetyNum">0</span></a>
     </nav>
   </div>
 
   <div class="repo-shell">
-    <!-- SAFETY BANNER -->
-    <div class="repo-banner">
+    <!-- SAFETY BANNER (filled + shown from Hx.alerts) -->
+    <div class="repo-banner" id="safetyBanner" style="display:none">
       <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span>
-      <div><b>Two of your medicines may not be safe together</b><p>tramadol (Mercy General ER) and sertraline (Dr. Okafor) — risk of serotonin syndrome.</p></div>
+      <div><b id="bannerTitle"></b><p id="bannerSummary"></p></div>
       <a href="safety.html">Review safety check <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
 
@@ -69,82 +142,76 @@
       <main>
         <div class="repo-subbar">
           <button class="branch-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg> main</button>
-          <span class="commits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg> <b>3</b>&nbsp;visits committed</span>
-          <div class="right"><a href="#" class="btn btn-accent btn-sm soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Add visit</a></div>
+          <span class="commits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="3"/><path d="M3 12h6M15 12h6"/></svg> <b id="commitCount">0</b>&nbsp;visits committed</span>
+          <div class="right"><a href="#" class="btn btn-accent btn-sm" id="addVisitToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Add visit</a></div>
         </div>
 
-        <div class="filelist">
-          <div class="fl-head">
-            <img class="av" src="assets/img/avatar-maria.png" alt="" />
-            <b>Mercy General ER</b>&nbsp;<span>committed the latest visit — “ER visit — chest pain”</span>
-            <span class="age mono">e9b2f1c · Jun 11</span>
+        <!-- ADD VISIT FORM (hidden until toggled) -->
+        <form class="hx-form" id="addVisitForm" style="display:none" autocomplete="off">
+          <h4>Add a visit</h4>
+          <p class="hint">A small commit is fine — even just a note. It's attributed to you and versioned.</p>
+          <div class="grid2">
+            <div class="hx-field"><label for="avTitle">Title</label><input class="hx-input" id="avTitle" placeholder="e.g. Follow-up call" required /></div>
+            <div class="hx-field"><label for="avDate">Date</label><input class="hx-input" id="avDate" type="date" /></div>
           </div>
-          <div class="file-row">
-            <svg class="fico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            <span class="fname">medications.md</span>
-            <span class="fmsg">added tramadol 50&nbsp;mg for pain <span class="hash">e9b2f1c</span></span>
-            <span class="fage">Jun 11</span>
+          <div class="hx-field"><label for="avSummary">Summary</label><input class="hx-input" id="avSummary" placeholder="One plain-language line about this visit" /></div>
+          <div class="hx-field"><label for="avNotes">Notes / symptoms (one per line)</label><textarea class="hx-input" id="avNotes" placeholder="e.g. sleeping better&#10;mood improving"></textarea></div>
+          <div class="hx-subhead">Optional — add a medicine</div>
+          <div class="grid2">
+            <div class="hx-field"><label for="avMedName">Medicine</label><input class="hx-input" id="avMedName" placeholder="e.g. ibuprofen" /></div>
+            <div class="hx-field"><label for="avMedDose">Dose</label><input class="hx-input" id="avMedDose" placeholder="e.g. 200 mg" /></div>
           </div>
-          <div class="file-row">
-            <svg class="fico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            <span class="fname">problems.md</span>
-            <span class="fmsg">diagnosed high blood pressure &amp; type 2 diabetes <span class="hash">a1c084e</span></span>
-            <span class="fage">Jan 15</span>
+          <div class="hx-field"><label for="avMedReason">Reason</label><input class="hx-input" id="avMedReason" placeholder="e.g. pain" /></div>
+          <div class="hx-subhead">Optional — add a problem</div>
+          <div class="hx-field"><label for="avProblem">Problem / condition</label><input class="hx-input" id="avProblem" placeholder="e.g. seasonal allergies" /></div>
+          <div class="hx-form-actions">
+            <button type="submit" class="btn btn-primary btn-sm" id="avSubmit">Commit visit</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="avCancel">Cancel</button>
+            <span class="hx-form-msg" id="avMsg"></span>
           </div>
-          <div class="file-row">
-            <svg class="fico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            <span class="fname">allergies.md</span>
-            <span class="fmsg">recorded penicillin allergy (rash) <span class="hash">a1c084e</span></span>
-            <span class="fage">Jan 15</span>
-          </div>
-          <div class="file-row">
-            <svg class="fico folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-            <span class="fname">encounters/</span>
-            <span class="fmsg">3 visits recorded — annual physical, psychiatry, ER</span>
-            <span class="fage">Jun 11</span>
-          </div>
-          <div class="file-row">
-            <svg class="fico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            <span class="fname">profile.md</span>
-            <span class="fmsg">Maria Reyes · age 58 <span class="hash">a1c084e</span></span>
-            <span class="fage">Jan 15</span>
-          </div>
-        </div>
+        </form>
 
-        <!-- README -->
-        <div class="readme">
+        <!-- TIMELINE TAB -->
+        <section class="hx-tabpanel active" id="panel-timeline">
+          <div class="filelist" id="fileList">
+            <div class="hx-skel">Loading files…</div>
+          </div>
+          <div class="tl" id="timeline" style="margin-top:18px">
+            <div class="hx-skel">Loading timeline…</div>
+          </div>
+        </section>
+
+        <!-- FILES TAB -->
+        <section class="hx-tabpanel" id="panel-files">
+          <div id="filesBody"><div class="hx-skel">Loading files…</div></div>
+        </section>
+
+        <!-- CODES TAB -->
+        <section class="hx-tabpanel" id="panel-codes">
+          <div class="codes-cap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" style="width:16px;height:16px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg> coded by RAG + Grok, deterministically verified</div>
+          <div id="codesBody"><div class="hx-skel">Loading codes…</div></div>
+        </section>
+
+        <!-- README / SUMMARY (Timeline only context, lives under tabs visually) -->
+        <div class="readme hx-tabpanel active" id="panel-readme">
           <div class="readme-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> README.md · your health summary</div>
           <div class="readme-body">
             <h2><img class="em" src="assets/img/emblem-shield.png" alt="" /> Your health, in plain language</h2>
-            <p class="summary">You're managing <b>high blood pressure</b> and <b>type 2 diabetes</b> — both found at your January check-up — and you started an antidepressant in March. Your most recent visit was an ER trip for chest pain on June 11; the good news is your heart tests were normal and it was muscular.</p>
+            <p class="summary" id="readmeSummary">—</p>
 
             <h4>At a glance</h4>
             <div class="stat-grid">
-              <div class="stat"><div class="n">4</div><div class="l">Medicines</div></div>
-              <div class="stat"><div class="n">2</div><div class="l">Conditions</div></div>
-              <div class="stat"><div class="n">3</div><div class="l">Care team</div></div>
-              <div class="stat"><div class="n" style="color:var(--danger-600)">1</div><div class="l">Safety alert</div></div>
+              <div class="stat"><div class="n" id="statMeds">0</div><div class="l">Medicines</div></div>
+              <div class="stat"><div class="n" id="statConditions">0</div><div class="l">Conditions</div></div>
+              <div class="stat"><div class="n" id="statCareTeam">0</div><div class="l">Care team</div></div>
+              <div class="stat"><div class="n" id="statSafety" style="color:var(--danger-600)">0</div><div class="l">Safety alerts</div></div>
             </div>
 
             <h4>Since your last visit</h4>
-            <ul class="checklist" style="gap:10px">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b style="color:var(--ink-900)">Added</b> tramadol 50&nbsp;mg for pain — by Mercy General ER</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--danger-600)" stroke-width="2.2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><span><b style="color:var(--danger-700)">Heads-up</b> — that new medicine may interact with your sertraline. <a href="safety.html" style="color:var(--blue-600);font-weight:600">See what to do →</a></span></li>
+            <ul class="checklist" style="gap:10px" id="sinceList">
+              <li><span class="hx-skel" style="padding:0">Loading…</span></li>
             </ul>
           </div>
-        </div>
-
-        <!-- ACTIVITY HEATMAP -->
-        <div class="activity">
-          <div class="ah-head"><h4>Health activity</h4><span class="sub">visits, refills &amp; check-ins over the past year</span></div>
-          <div class="cal">
-            <div class="cal-days"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div>
-            <div class="cal-main">
-              <div class="cal-months" id="cal-months"></div>
-              <div class="heatmap" id="heatmap"></div>
-            </div>
-          </div>
-          <div class="cal-legend">Less <span class="sq"></span><span class="sq l1"></span><span class="sq l2"></span><span class="sq l3"></span><span class="sq l4"></span> More</div>
         </div>
       </main>
 
@@ -152,38 +219,50 @@
       <aside class="sidebar">
         <div class="side-block">
           <div class="side-title">About</div>
-          <p class="desc">Your personal health record. Only you and the people you allow can see it.</p>
+          <p class="desc" id="aboutDesc">Your personal health record. Only you and the people you allow can see it.</p>
           <ul class="about-list">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Maria Reyes · 58</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg> Phone number + Face ID</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 3 visits · since Jan 2026</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span id="aboutOwner">—</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span id="aboutVisits">—</span></li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Yours — export anytime</li>
           </ul>
         </div>
 
         <div class="side-block">
           <div class="side-title">Conditions</div>
-          <div class="topics">
-            <span class="topic"><span class="d" style="background:var(--danger-500,#d8453b)"></span>High blood pressure</span>
-            <span class="topic"><span class="d" style="background:var(--blue-500)"></span>Type 2 diabetes</span>
-            <span class="topic"><span class="d" style="background:var(--green-500)"></span>Depression</span>
+          <div class="topics" id="conditionsList"><span class="hx-skel" style="padding:0">Loading…</span></div>
+        </div>
+
+        <div class="side-block">
+          <div class="side-title">Care team</div>
+          <div id="careTeamList"><span class="hx-skel" style="padding:0">Loading…</span></div>
+        </div>
+
+        <div class="side-block">
+          <div class="side-title">Medicines</div>
+          <div id="medsList"><span class="hx-skel" style="padding:0">Loading…</span></div>
+        </div>
+
+        <!-- SHARING (owner only) -->
+        <div class="side-block" id="sharingBlock" style="display:none">
+          <div class="side-title">Sharing</div>
+          <div class="hx-subhead" style="margin-top:0">Grant a provider</div>
+          <form id="grantForm" autocomplete="off">
+            <div class="hx-field"><input class="hx-input" id="grantUser" placeholder="provider username or email" /></div>
+            <div class="hx-form-actions" style="margin-top:0">
+              <select class="hx-input" id="grantAccess" style="width:auto;flex:0 0 auto"><option value="read">Read</option><option value="write">Write</option></select>
+              <button type="submit" class="btn btn-primary btn-sm">Grant</button>
+            </div>
+          </form>
+          <span class="hx-form-msg" id="grantMsg" style="display:block;margin:6px 0 0"></span>
+          <div id="grantList" style="margin-top:8px"></div>
+
+          <div class="hx-subhead">Share link</div>
+          <div id="shareLinkList"></div>
+          <div class="hx-form-actions" style="margin-top:8px">
+            <select class="hx-input" id="shareLinkAccess" style="width:auto;flex:0 0 auto"><option value="read">Read</option><option value="write">Write</option></select>
+            <button type="button" class="btn btn-ghost btn-sm" id="createShareBtn">Create link</button>
           </div>
-        </div>
-
-        <div class="side-block">
-          <div class="side-title">Care team <a href="#" class="soon mini">Manage</a></div>
-          <div class="team-row"><img class="av" src="assets/img/avatar-maria.png" alt="" /><div><b>Maria Reyes</b><span>You · owner</span></div></div>
-          <div class="team-row"><span class="av-mono" style="background:linear-gradient(135deg,var(--blue-400),var(--blue-600))">C</span><div><b>Dr. Chen</b><span>Primary care · Eastside</span></div></div>
-          <div class="team-row"><span class="av-mono" style="background:linear-gradient(135deg,var(--green-500),var(--green-700))">O</span><div><b>Dr. Okafor</b><span>Psychiatry · Bayview</span></div></div>
-          <div class="team-row"><span class="av-mono" style="background:linear-gradient(135deg,#e8896b,#d8453b)">ER</span><div><b>Mercy General ER</b><span>Emergency care</span></div></div>
-        </div>
-
-        <div class="side-block">
-          <div class="side-title">Medicines <a href="#" class="soon mini">All 4</a></div>
-          <div class="meds-line"><span class="md"></span><b>lisinopril</b>&nbsp;<span class="dose">10&nbsp;mg</span><span class="by">Dr. Chen</span></div>
-          <div class="meds-line"><span class="md"></span><b>metformin</b>&nbsp;<span class="dose">500&nbsp;mg</span><span class="by">Dr. Chen</span></div>
-          <div class="meds-line"><span class="md flag"></span><b>sertraline</b>&nbsp;<span class="dose">100&nbsp;mg</span><span class="by">Dr. Okafor</span></div>
-          <div class="meds-line"><span class="md flag"></span><b>tramadol</b>&nbsp;<span class="dose">50&nbsp;mg</span><span class="by">Mercy ER</span></div>
+          <span class="hx-form-msg" id="shareLinkMsg" style="display:block;margin:6px 0 0"></span>
         </div>
       </aside>
     </div>
@@ -193,6 +272,7 @@
     <span class="synth">🛡 Synthetic data only · No real patient information</span> &nbsp;·&nbsp; Hx — your health, version-controlled.
   </footer>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/hx-api.js"></script>
+  <script src="assets/js/repo.js"></script>
 </body>
 </html>

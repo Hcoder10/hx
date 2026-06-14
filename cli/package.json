@@ -1,0 +1,29 @@
+{
+  "name": "hx",
+  "version": "0.1.0",
+  "description": "git for your health — the hx CLI. Talk to your medical record like a git repo.",
+  "type": "module",
+  "bin": {
+    "hx": "./bin/hx.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node ./bin/hx.mjs"
+  },
+  "keywords": [
+    "health",
+    "git",
+    "cli",
+    "ehr",
+    "medical-records",
+    "hx"
+  ],
+  "license": "MIT"
+}
