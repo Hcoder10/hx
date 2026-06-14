@@ -34,63 +34,80 @@ function generateSecureId(prefix: string): string {
 }
 
 // ========================================
-// Tool Definitions
+// PHONE AUTH: caller must speak a simple Hx ID before the record unlocks.
+// (No caller-ID factor — works from one phone.)  123 = Maria, 456 = Dr. Okafor.
 // ========================================
-const tools = [
+const ID_MAP: Record<string, { userId: string; role: "patient" | "provider"; repoId: string }> = {
+  "123": { userId: "maria", role: "patient", repoId: "mental-health" },
+  "456": { userId: "okafor", role: "provider", repoId: "mental-health" },
+};
+
+const LOCKED_INSTRUCTIONS = `You are the Hx phone line for an AI-augmented psychiatry practice. The caller is NOT yet verified.
+Greet them in one short sentence and ask them to say their Hx ID number to access their record.
+Do NOT reveal, discuss, or record ANY health information until they are verified.
+When they say their digits, call the verify_id tool with those digits. If it fails, ask once more; after 3 failures, apologize and ask them to try later.`;
+
+const AUTH_TOOLS = [
   {
     type: "function",
-    name: "add_visit",
-    description:
-      "Record a new medical visit/appointment in the patient's Hx record after they describe it. Only call once you have at least a title.",
+    name: "verify_id",
+    description: "Verify the caller's spoken Hx ID number to unlock their record. Call this with the digits the caller says.",
     parameters: {
       type: "object",
-      properties: {
-        title: { type: "string", description: "Short visit title, e.g. 'ER visit - chest pain'" },
-        place: { type: "string", description: "Where it happened" },
-        providerName: { type: "string", description: "Doctor or facility name, if known" },
-        providerRole: { type: "string", description: "Specialty, if known" },
-        date: { type: "string", description: "YYYY-MM-DD, if known" },
-        summary: { type: "string", description: "One-sentence plain summary of what happened" },
-        medications: {
-          type: "array",
-          description: "Any new medicines prescribed",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              dose: { type: "string" },
-              reason: { type: "string" },
-            },
-            required: ["name"],
-          },
-        },
-      },
-      required: ["title"],
+      properties: { id: { type: "string", description: "the spoken ID digits, e.g. '123'" } },
+      required: ["id"],
     },
   },
 ];
 
-// ========================================
-// Tool Handlers
-// ========================================
-async function handleToolCall(name: string, args: Record<string, any>): Promise<string> {
-  switch (name) {
-    case "add_visit": {
-      try {
-        const res = await fetch(`${APP_URL}/api/visits`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(args),
-        });
-        const data = await res.json();
-        return JSON.stringify(data);
-      } catch (e: any) {
-        return JSON.stringify({ ok: false, error: e?.message || "add_visit failed" });
-      }
-    }
-    default:
-      return JSON.stringify({ error: `Unknown tool: ${name}` });
+// Per-call auth state.
+type CallAuth = { authed: boolean; cookie: string; role: "patient" | "provider"; repoId: string };
+
+// Server-side dev-login to the Hub -> returns a session cookie for that user.
+async function devLogin(userId: string): Promise<string | null> {
+  try {
+    const r = await fetch(`${APP_URL}/api/auth/dev-login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+    if (!r.ok) return null;
+    const sc = r.headers.get("set-cookie");
+    return sc ? sc.split(";")[0] : null; // "hx_session=..."
+  } catch {
+    return null;
   }
+}
+
+// Role grounding (instructions + tools + voice) from the Hub, using the cookie.
+async function fetchAgent(role: string, repoId: string, cookie: string) {
+  const r = await fetch(`${APP_URL}/api/voice/agent-token?role=${role}&repoId=${repoId}&short=1`, {
+    headers: { cookie },
+  });
+  return r.json() as Promise<{ instructions: string; tools: any[]; voice: string }>;
+}
+
+// Execute a role tool (after auth) against the Hub with the call's cookie.
+async function runRoleTool(call: CallAuth, name: string, args: Record<string, any>): Promise<string> {
+  const h = { "Content-Type": "application/json", cookie: call.cookie };
+  const rid = call.repoId;
+  const post = (path: string, body: any) =>
+    fetch(`${APP_URL}${path}`, { method: "POST", headers: h, body: JSON.stringify(body) }).then((r) => r.text());
+  try {
+    if (name === "check_meds") return await fetch(`${APP_URL}/api/hub/alerts`, { headers: h }).then((r) => r.text());
+    if (name === "get_summary") return await fetch(`${APP_URL}/api/repos/${rid}/visits`, { headers: h }).then((r) => r.text());
+    if (name === "record_assessment")
+      return await post(`/api/repos/${rid}/visits`, { title: `${args.instrument} check-in`, summary: `${args.instrument} score ${args.score}`, notes: [`${args.instrument}: ${args.score}`] });
+    if (name === "log_checkin")
+      return await post(`/api/repos/${rid}/visits`, { title: "Phone check-in", summary: args.summary || "", notes: [...((args.symptoms as string[]) || []), ...(((args.negatives as string[]) || []).map((n) => `reports NOT: ${n}`))] });
+    if (name === "prescribe")
+      return await post(`/api/hub/check-interaction`, { repoId: rid, name: args.name, dose: args.dose, reason: args.reason });
+    if (name === "commit_visit")
+      return await post(`/api/repos/${rid}/visits`, { title: args.title, summary: args.summary, addProblems: ((args.diagnoses as string[]) || []).map((n) => ({ name: n })), addMedications: ((args.medications as any[]) || []).map((m) => ({ name: m.name, dose: m.dose || "", reason: m.reason || "" })), notes: args.notes || [] });
+  } catch (e: any) {
+    return JSON.stringify({ ok: false, error: e?.message || "tool failed" });
+  }
+  return JSON.stringify({ error: `Unknown tool: ${name}` });
 }
 
 // ========================================
@@ -156,17 +173,11 @@ app.ws("/media-stream/:callId", async (ws, req) => {
     logEvent(callId, 'twilio.start');
   });
 
-  // Fetch Maria-grounded instructions from the Hx app (single source of truth)
-  let instructions = bot.instructions;
-  try {
-    const r = await fetch(`${APP_URL}/api/voice/instructions`);
-    if (r.ok) {
-      const j = (await r.json()) as { instructions?: string };
-      if (j.instructions) instructions = j.instructions;
-    }
-  } catch {
-    // fall back to default bot instructions
-  }
+  // Phone calls start LOCKED — the caller must verify an Hx ID before any record
+  // access. Persona + role tools are loaded after verify_id succeeds.
+  let instructions = LOCKED_INSTRUCTIONS;
+  const call: CallAuth = { authed: false, cookie: "", role: "patient", repoId: "mental-health" };
+  let authFails = 0;
 
   // Create raw WebSocket connection to x.ai (pin the early-access voice model)
   const WebSocket = require('ws');
@@ -278,7 +289,7 @@ app.ws("/media-stream/:callId", async (ws, req) => {
               output: { format: { type: 'audio/pcmu' } },
             },
             turn_detection: { type: 'server_vad' },
-            ...(ENABLE_TOOLS ? { tools: tools } : {}),
+            tools: AUTH_TOOLS, // locked: only verify_id until the caller proves their ID
           }
         };
         logEvent(callId, sessionConfig.type);
@@ -311,10 +322,46 @@ app.ws("/media-stream/:callId", async (ws, req) => {
             }
             
             console.log(`[${callId}] FUNCTION CALL: ${functionName}(${JSON.stringify(args)})`);
-            
-            // Execute the tool
-            const result = await handleToolCall(functionName, args);
-            console.log(`[${callId}] FUNCTION RESULT: ${result}`);
+
+            // Route: verify_id (auth gate) -> role tools (after auth) -> reject.
+            let result: string;
+            if (functionName === "verify_id") {
+              const id = String(args.id || "").replace(/\D/g, "");
+              const m = ID_MAP[id];
+              if (!m) {
+                authFails++;
+                result = JSON.stringify({ verified: false, message: authFails >= 3 ? "Too many failed attempts." : "ID not recognized. Please say your Hx ID again." });
+              } else {
+                const cookie = await devLogin(m.userId);
+                if (!cookie) {
+                  result = JSON.stringify({ verified: false, error: "login failed" });
+                } else {
+                  call.authed = true; call.cookie = cookie; call.role = m.role; call.repoId = m.repoId;
+                  try {
+                    const agent = await fetchAgent(m.role, m.repoId, cookie);
+                    xaiWs.send(JSON.stringify({
+                      type: "session.update",
+                      session: {
+                        instructions: agent.instructions,
+                        voice: agent.voice || (m.role === "provider" ? "rex" : "eve"),
+                        reasoning_effort: "none",
+                        audio: { input: { format: { type: "audio/pcmu" } }, output: { format: { type: "audio/pcmu" } } },
+                        turn_detection: { type: "server_vad" },
+                        tools: agent.tools,
+                      },
+                    }));
+                  } catch (e) {
+                    console.log(`[${callId}] fetchAgent failed: ${e}`);
+                  }
+                  result = JSON.stringify({ verified: true, role: m.role, message: `Verified. You're speaking as the ${m.role}. How can I help?` });
+                }
+              }
+            } else if (!call.authed) {
+              result = JSON.stringify({ ok: false, error: "Caller not verified yet — ask for the Hx ID first." });
+            } else {
+              result = await runRoleTool(call, functionName, args);
+            }
+            console.log(`[${callId}] FUNCTION RESULT: ${result.slice(0, 200)}`);
             
             // Send the function result back to XAI
             const functionResult = {
