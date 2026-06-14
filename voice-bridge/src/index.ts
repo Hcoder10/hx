@@ -15,6 +15,10 @@ const XAI_API_KEY = process.env.XAI_API_KEY || "";
 const API_URL = process.env.API_URL || "wss://api.x.ai/v1/realtime";
 const MODEL = process.env.HX_VOICE_MODEL || "grok-voice-think-fast-1.1";
 const APP_URL = process.env.HX_APP_URL || "http://localhost:3000";
+// Public hostname for Twilio <Stream> URLs. MUST use a dedicated var: the OS already
+// sets HOSTNAME (= the machine name, e.g. "SquaredCube") and dotenv won't override
+// an existing env var, so reusing HOSTNAME silently breaks the stream URL.
+const PUBLIC_HOST = process.env.HX_PUBLIC_HOST || "";
 // Feature flags
 const ENABLE_TOOLS = process.env.ENABLE_TOOLS !== "false"; // Default: enabled
 
@@ -128,15 +132,15 @@ app.post("/twiml", async (req, res) => {
   try {
     const callId = generateSecureId('call');
 
-    if (!process.env.HOSTNAME) {
-      res.status(500).send("Server misconfigured: HOSTNAME not set");
+    if (!PUBLIC_HOST) {
+      res.status(500).send("Server misconfigured: HX_PUBLIC_HOST not set");
       return;
     }
 
     res.status(200);
     res.type("text/xml");
 
-    const hostname = process.env.HOSTNAME.replace(/^https?:\/\//, '');
+    const hostname = PUBLIC_HOST.replace(/^https?:\/\//, '');
     const streamUrl = `wss://${hostname}/media-stream/${callId}`;
 
     const twimlResponse = `\
@@ -460,7 +464,7 @@ If they're not interested, politely thank them for their time and end the call g
 
 // TwiML endpoint for outbound calls
 app.post("/outbound-twiml", (req, res) => {
-  const hostname = process.env.HOSTNAME?.replace(/^https?:\/\//, "") || "";
+  const hostname = PUBLIC_HOST.replace(/^https?:\/\//, "");
   
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
