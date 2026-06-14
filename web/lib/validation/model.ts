@@ -69,6 +69,7 @@ export type CodedEntry = {
 export type VerifyReason =
   | "ok"
   | "no_code" // Grok abstained / empty code
+  | "negated" // a negative finding ("not ADHD", "denies chest pain") — intentionally not coded
   | "code_not_found" // code does not exist in the public set
   | "system_mismatch" // code exists but in the wrong system for this section
   | "weak_match"; // code exists but description doesn't match the claimed term

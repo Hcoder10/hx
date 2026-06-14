@@ -27,6 +27,14 @@ export default function Home() {
         </Link>
         <p className="text-xs text-gray-400">Demo · synthetic data only · no real patient information</p>
       </div>
+      <div className="w-full max-w-xs">
+        <Link
+          href="/hub"
+          className="block w-full rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm font-semibold text-teal-700 hover:bg-teal-50"
+        >
+          Open the Hub — sign in with a passkey →
+        </Link>
+      </div>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { CodedEntry, VerifiedEntry, VerifyReason } from "./model";
 import { findCode } from "./code-sets";
-import { bestSimilarity } from "./text";
+import { bestSimilarity, isNegated } from "./text";
 
 // STAGE 4 — VERIFY  (DETERMINISTIC. NO ML. NO DEPS. FAST.)
 //
@@ -38,6 +38,11 @@ export function verifyEntry(entry: CodedEntry, threshold = MATCH_THRESHOLD): Ver
 
   // Gate 0: the model abstained (or produced nothing usable).
   if (!codeOf(entry)) {
+    // A negated / negative finding is abstained ON PURPOSE — surface it as such
+    // rather than as a failure that "needs manual coding".
+    if (isNegated(entry.term)) {
+      return flag(base, "negated", `"${entry.term}" is a negative finding — recorded as ruled-out, not coded.`);
+    }
     return flag(base, "no_code", `No code was assigned for "${entry.term}". Needs manual coding.`);
   }
 

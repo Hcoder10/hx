@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hx — Your health history, version-controlled</title>
+  <meta name="description" content="Hx is GitHub for your health. Every visit is a version. See what changed, know who added what, and catch dangerous drug combinations no single doctor can see." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="bg-aura"></div>
+  <div class="bg-dots"></div>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="brand"><img src="assets/img/logo-mark.svg" alt="Hx logo" /> Hx</a>
+      <nav class="nav-links">
+        <a href="#product">Product</a>
+        <a href="#safety">Safety</a>
+        <a href="#interfaces">Developers</a>
+        <a href="#product">How it works</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="app.html" class="signin">Sign in</a>
+        <a href="app.html" class="btn btn-accent btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">⎇ Your health, under version control</span>
+        <h1>Your health history,<br /><span class="gradient-text">version&#8209;controlled.</span></h1>
+        <p class="lead">Every doctor's visit becomes a version of your record. See what changed, who added what, and catch dangerous combinations — all in one place that you own.</p>
+        <div class="hero-cta">
+          <a href="app.html" class="btn btn-primary btn-lg">Get started free
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#product" class="btn btn-ghost btn-lg">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            See how it works
+          </a>
+        </div>
+        <div class="hero-trust"><span class="dot"></span> Synthetic demo data only · your record stays yours, exportable anytime</div>
+      </div>
+
+      <div class="hero-stage">
+        <div class="glow"></div>
+        <img class="hero-art" src="assets/img/hero-art.png" alt="A glowing strand that is both a DNA helix and a git commit graph" />
+        <div class="vtag v1 float"><span class="vdot" style="background:var(--blue-600)"></span><div><b>ER visit · chest pain</b><span>committed Jun 11 · Mercy General</span></div></div>
+        <div class="vtag v2 float"><span class="vdot" style="background:var(--green-500)"></span><div><b>Psychiatry follow-up</b><span>committed Mar 3 · Dr. Okafor</span></div></div>
+        <div class="vtag v3 float"><span class="vdot" style="background:var(--blue-400)"></span><div><b>Annual physical</b><span>committed Jan 15 · Dr. Chen</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <div class="wrap">
+    <div class="strip">
+      <span class="lbl">Brings together</span>
+      <span class="chip">Apple Health</span>
+      <span class="chip">FHIR records</span>
+      <span class="chip">CommonHealth</span>
+      <span class="chip">Lab portals</span>
+      <span class="chip">Pharmacy history</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT SHOWCASE -->
+  <section class="section" id="product">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="eyebrow green">Your record, as a repository</span>
+        <h2>Open your health like you'd open a repo.</h2>
+        <p class="lead">Files for your medicines, conditions and allergies. A commit for every visit. A history you can actually read.</p>
+      </div>
+      <div class="showcase">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dots"><i style="background:#f0625a"></i><i style="background:#f5bd4f"></i><i style="background:#5bce6a"></i></span>
+            <span class="url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> hx.health/maria-reyes/health</span>
+          </div>
+          <img src="assets/img/preview-dashboard.png" alt="Maria's health record displayed like a GitHub repository" />
+        </div>
+        <div class="float-badge">
+          <img src="assets/img/emblem-shield.png" alt="" />
+          <div><b>1 safety catch found</b><span>tramadol × sertraline</span></div>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="features" id="features">
+        <article class="feature">
+          <img class="ico" src="assets/img/icon-diff.png" alt="" />
+          <h3>See what changed</h3>
+          <p>Every visit is a new version. Compare any two and see exactly what a doctor changed — new meds, new diagnoses, what resolved.</p>
+          <span class="cmd mono">hx diff HEAD~1</span>
+        </article>
+        <article class="feature">
+          <img class="ico" src="assets/img/icon-blame.png" alt="" />
+          <h3>Know who added what</h3>
+          <p>Tap any medicine or diagnosis to see which provider added it, and when — full provenance across every clinic you've visited.</p>
+          <span class="cmd mono">hx blame medications.md</span>
+        </article>
+        <article class="feature">
+          <img class="ico" src="assets/img/icon-conflict.png" alt="" />
+          <h3>Catch dangerous combinations</h3>
+          <p>Hx reads your whole record after every update and flags unsafe drug interactions that no single doctor could see.</p>
+          <span class="cmd mono">hx check</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAFETY (the wow) -->
+  <section class="section safety" id="safety">
+    <div class="wrap safety-grid">
+      <div>
+        <div class="safety-emblem">
+          <img src="assets/img/emblem-shield.png" alt="" />
+          <div>
+            <span class="eyebrow green">The catch that matters</span>
+            <h2 style="margin-top:6px">It caught what three<br>doctors couldn't.</h2>
+          </div>
+        </div>
+        <p class="lead" style="margin-top:22px">Maria's ER prescribed <b>tramadol</b> for chest pain. Her psychiatrist had started <b>sertraline</b> months earlier. Neither chart knew about the other — but Hx reads the <i>whole</i> record, so it flagged the serotonin-syndrome risk the moment the ER visit was added.</p>
+        <div style="margin-top:22px;display:flex;gap:13px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--sh-sm)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" style="width:22px;height:22px;flex:0 0 auto;margin-top:2px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/></svg>
+          <div style="font-size:.95rem"><b style="color:var(--ink-900)">Maria asked out loud:</b> <span style="color:var(--ink-600)">“Is everything I'm taking safe together?”</span> — and Hx answered, naming both doctors and dates.</div>
+        </div>
+      </div>
+
+      <div class="alert-card">
+        <div class="alert-top">
+          <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span>
+          <div><h3>Two of your medicines may not be safe together</h3><p>Tramadol and Sertraline can interact.</p></div>
+        </div>
+        <div class="alert-body">
+          <div class="med-rows">
+            <div class="med-row">
+              <span class="pill-dot" style="background:var(--blue-50);color:var(--blue-600)">💊</span>
+              <div><b>tramadol 50&nbsp;mg</b><div class="prov">Added by Mercy General ER · Jun 11</div></div>
+              <span class="arm">records@mercygeneral</span>
+            </div>
+            <div class="med-row">
+              <span class="pill-dot" style="background:var(--green-50);color:var(--green-700)">💊</span>
+              <div><b>sertraline 100&nbsp;mg</b><div class="prov">Added by Dr. Okafor · Mar 3</div></div>
+              <span class="arm">dr.okafor@bayview</span>
+            </div>
+          </div>
+          <p style="margin-top:14px;font-size:.92rem;color:var(--ink-600)">Together these raise the risk of a serious reaction called <b style="color:var(--ink-800)">serotonin syndrome</b>.</p>
+        </div>
+        <div class="alert-foot">
+          <span class="who">Flagged automatically when the ER visit was committed.</span>
+          <a href="safety.html" class="btn btn-primary btn-sm">View safety check
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERFACES -->
+  <section class="section" id="interfaces">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="eyebrow">One record, three ways in</span>
+        <h2>An app, a phone call, or a terminal.</h2>
+        <p class="lead">Git is the engine — never the interface. A family member just calls a number. A developer gets the full CLI. Same record underneath.</p>
+      </div>
+      <div class="iface">
+        <article class="iface-card">
+          <span class="tag">For everyone</span>
+          <h3>The warm app</h3>
+          <p>A friendly timeline of plain-language cards. No charts to decode, no jargon — ever.</p>
+          <div class="body">
+            <div class="app-peek">
+              <div class="vrow"><span class="av-mono" style="background:linear-gradient(135deg,var(--blue-500),var(--blue-700))">ER</span><div><b>ER visit — chest pain</b><span>Mercy General · Jun 11</span></div></div>
+              <div class="vrow"><span class="av-mono" style="background:linear-gradient(135deg,var(--green-500),var(--green-700))">O</span><div><b>Psychiatry follow-up</b><span>Dr. Okafor · Mar 3</span></div></div>
+              <div class="vrow"><span class="av-mono" style="background:linear-gradient(135deg,var(--blue-400),var(--blue-600))">C</span><div><b>Annual physical</b><span>Dr. Chen · Jan 15</span></div></div>
+            </div>
+          </div>
+        </article>
+        <article class="iface-card">
+          <span class="tag">Zero apps needed</span>
+          <h3>Call Hx</h3>
+          <p>Dial a number after any visit and just talk. It writes the visit to your record for you.</p>
+          <div class="body">
+            <div class="phone-ui">
+              <div class="bubble">Hi Maria — how did your visit go today?</div>
+              <div class="bubble me">They gave me tramadol for the chest pain.</div>
+              <div class="bubble">Got it, added. Heads up — that may not mix well with your sertraline. I'll flag it for you. 🛡️</div>
+              <div class="lang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg> Also speaks Spanish, Mandarin, Tagalog…</div>
+            </div>
+          </div>
+        </article>
+        <article class="iface-card">
+          <span class="tag">For developers</span>
+          <h3>The <span class="mono" style="color:var(--blue-600)">hx</span> CLI</h3>
+          <p>It's real git. Clone it, diff it, blame it, export it. Your record, your machine.</p>
+          <div class="body">
+            <div class="terminal">
+              <div class="term-bar"><i style="background:#f0625a"></i><i style="background:#f5bd4f"></i><i style="background:#5bce6a"></i><span class="t">maria@home — hx</span></div>
+              <div class="term-body"><span class="mut">$</span> hx log
+<span class="pr">e9b2f1c</span> <span class="mut">Jun 11</span>  Mercy General ER   ER visit — chest pain
+<span class="pr">7f3a9d4</span> <span class="mut">Mar 03</span>  Dr. Okafor         Psychiatry follow-up
+<span class="pr">a1c084e</span> <span class="mut">Jan 15</span>  Dr. Chen           Annual physical
+
+<span class="mut">$</span> hx check
+<span class="warn">⚠ serotonin syndrome risk</span> <span class="mut">—</span> tramadol <span class="mut">×</span> sertraline
+<span class="ok">✓ blame:</span> ER (Jun 11) <span class="mut">·</span> Dr. Okafor (Mar 3)</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta-band">
+        <h2>Your health story is yours. Start owning it.</h2>
+        <p>Free while in preview. Synthetic data today, your real records tomorrow — encrypted, exportable, and never sold.</p>
+        <form class="cta-form" onsubmit="window.location.href='app.html';return false;">
+          <input type="tel" placeholder="Enter your phone number" aria-label="Phone number" />
+          <button class="btn btn-dark btn-lg" type="submit">Get started</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand"><img src="assets/img/logo-mark.svg" alt="" style="width:30px;height:30px" /> Hx</a>
+          <p class="blurb">GitHub for your health. Version control for the one record that matters most — and it stays yours.</p>
+        </div>
+        <div><h5>Product</h5><ul><li><a href="app.html">Timeline</a></li><li><a href="safety.html">Safety checks</a></li><li><a href="app.html">Medicines</a></li><li><a href="app.html">Export &amp; share</a></li></ul></div>
+        <div><h5>Developers</h5><ul><li><a href="#interfaces">hx CLI</a></li><li><a href="#interfaces">API</a></li><li><a href="#product">FHIR import</a></li><li><a href="#product">Docs</a></li></ul></div>
+        <div><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></div>
+        <div><h5>Trust</h5><ul><li><a href="#">Privacy</a></li><li><a href="#">Security</a></li><li><a href="#">HIPAA</a></li><li><a href="#">Terms</a></li></ul></div>
+      </div>
+      <div class="footer-bot">
+        <span>© 2026 Hx. All rights reserved.</span>
+        <span class="synth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Synthetic data only · No real patient information</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
+</body>
+</html>

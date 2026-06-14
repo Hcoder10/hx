@@ -30,6 +30,7 @@ Your task: pick the ONE candidate whose description/aliases best mean the same c
 Rules — follow EXACTLY:
 1. Choose "code" ONLY from the provided candidates. Never output a code that is not in the candidate list. Never modify, complete, or guess a code.
 2. If NO candidate is a correct match for the term, abstain: return "code": "" . Abstaining is correct and safe; a wrong code is worse than none.
+2b. NEGATION — abstain (return "code": "") whenever the text is a NEGATIVE finding or says the patient does NOT have the condition: e.g. "not ADHD", "no diabetes", "denies chest pain", "rule out / r/o sepsis", "negative for flu", "without fever", "no history of cancer", "resolved". NEVER code a condition the text negates. This rule overrides candidate matches.
 3. "term" MUST be the plain human term the chosen code stands for — use the candidate's description (or a faithful normalization of "text"). Do NOT put a code, abbreviation, or invented label in "term".
 4. Do NOT add, drop, or alter any value in "fields". Copy it through unchanged.
 5. Match meaning, not surface spelling. "high blood pressure (hypertension)" matches an "Essential (primary) hypertension" candidate. "muscular chest pain" describing pain ruled non-cardiac matches "Myalgia", not "Chest pain", only if the candidates support it.
@@ -50,6 +51,8 @@ export const GROK_REWRITE_PROMPT = `You translate a patient's or provider's casu
 You receive a JSON object: { "text": "...the casual phrasing..." }
 
 Reply with ONLY the clinical term(s) as a short phrase. No code, no explanation, no quotes, no punctuation beyond what the term needs. If the text is already a clinical term, return it unchanged. If you genuinely cannot map it, repeat the input text.
+
+If the text NEGATES a condition (not / no / denies / rule out / negative for / without / no history of), return the text UNCHANGED including the negation word — do NOT convert it to the positive clinical term.
 
 Examples:
 {"text":"wants to kill themselves"} -> suicidal ideation

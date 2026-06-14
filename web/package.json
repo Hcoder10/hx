@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@simplewebauthn/browser": "^13.3.0",
+    "@simplewebauthn/server": "^13.3.1",
     "isomorphic-git": "^1.38.4",
     "next": "16.2.9",
     "react": "19.2.4",

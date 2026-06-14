@@ -76,6 +76,22 @@ export function similarity(a: string, b: string): number {
   return Math.min(1, s);
 }
 
+// Detect a NEGATED clinical statement: text that says the patient does NOT have a
+// condition ("not ADHD", "no diabetes", "denies chest pain", "rule out sepsis",
+// "negative for flu", "without fever", "no history of cancer"). Such items must
+// NOT be coded as if present — the coder abstains and the verifier marks them as a
+// negative finding. Deterministic backstop for the model's own negation handling.
+const NEGATION_RE =
+  /^\s*(no|not|non|never|without|w\/o|denies|denied|deny|negative for|neg for|negative|rule[ds]?\s*out|r\/o|ruled out|no evidence of|no signs? of|no history of|no h\/o|free of|absence of|absent|resolved|ruled-out)\b/i;
+
+export function isNegated(text: string): boolean {
+  if (!text) return false;
+  const t = text.trim();
+  // leading negation word, or an explicit "no <x>" / "not <x>" anywhere early.
+  if (NEGATION_RE.test(t)) return true;
+  return /\b(not|denies|denied|negative for|ruled out|rule out|r\/o|no history of|no evidence of)\b/i.test(t);
+}
+
 // Best similarity of a term against a canonical description OR any of its
 // aliases. This is the single comparison both retrieval (ranking) and the
 // verifier (gating) use, so a candidate scores the same in both stages.
